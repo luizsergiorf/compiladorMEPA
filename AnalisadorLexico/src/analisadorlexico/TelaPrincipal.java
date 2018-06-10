@@ -297,7 +297,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuItemProjeto = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("ANALISADOR LEXICO");
+        setTitle("COMPILADOR");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
@@ -555,7 +555,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void jMenuItemProjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemProjetoActionPerformed
         // TODO add your handling code here:
         System.out.println("PROJETO IFTM 9 PERIODO");
-        JOptionPane.showMessageDialog(rootPane, "PROJETO COMPILADORES\nIFTM\nENGENHARIA DA COMPUTAÇÃO");
+        JOptionPane.showMessageDialog(rootPane, "PROJETO COMPILADORES\n"
+                + "IFTM / ENGENHARIA DA COMPUTAÇÃO\n"
+                + "======================================\n"
+                + "FELLIPE PRATES - LUIZ SERGIO - TIAGO ELIAS");
     }//GEN-LAST:event_jMenuItemProjetoActionPerformed
 
     private void jMenuItemSalvarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSalvarComoActionPerformed
