@@ -44,9 +44,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
             = {"and", "downto", "in", "packed", "to", "array", "else", "inline", "procedure", "type", "asm", "end", "interface",
                 "program", "unit", "begin", "file", "label", "record", "until", "case", "for", "mod", "repeat", "until", "const",
                 "foward", "nil", "set", "uses", "constructor", "function", "not", "shl", "var", "destructor", "Goto", "object",
-                "shr", "while", "div", "if", "of", "string", "with", "do", "implementation", "or", "then", "xor", "integer","real","boolean",
-                "char","enumerado","subintervalo","string","array","record","set","file","text","pointer","then","begin","functio","do","while","longint"};
-    
+                "shr", "while", "div", "if", "of", "string", "with", "do", "implementation", "or", "then", "xor", "integer", "real", "boolean",
+                "char", "enumerado", "subintervalo", "string", "array", "record", "set", "file", "text", "pointer", "then", "begin", "functio", "do", "while", "longint"};
+
     public boolean pegarSimbolos(String palavra) {
         boolean valida = false;
         for (char c : vetSimbolos) {
@@ -75,7 +75,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         int i = 0;
         int tamanho = token.getLexema().length();
         //Token tk = new Token();
-        
+
         while (token.getLexema().charAt(i) >= 48 && token.getLexema().charAt(i) <= 57) {
             lexema = lexema + token.getLexema().charAt(i);
 
@@ -117,30 +117,74 @@ public class TelaPrincipal extends javax.swing.JFrame {
         int i = 0;
         //Token tk = new Token();
 
-        while (((token.getLexema().charAt(i) >= 48) && (token.getLexema().charAt(i) <= 57))
-                || ((token.getLexema().charAt(i) >= 65) && (token.getLexema().charAt(i) <= 90))
-                || ((token.getLexema().charAt(i) >= 97) && (token.getLexema().charAt(i) <= 122))) {
+        while (((token.getLexema().charAt(i) >= 48) && (token.getLexema().charAt(i) <= 57)) //numeros
+                || ((token.getLexema().charAt(i) >= 65) && (token.getLexema().charAt(i) <= 90)) //alfabeto maiusculo
+                || ((token.getLexema().charAt(i) >= 97) && (token.getLexema().charAt(i) <= 122))) { //alfabeto minusculo
 
             lexema = lexema + token.getLexema().charAt(i);
 
+            //condiçao de parada
             if (i != tamanho - 1) {
                 i++;
             } else {
                 break;
             }
         }
-        
+
         System.out.println("teste 3 " + token.getLexema());
         boolean reservada = palavraReservada(token.getLexema());
         boolean simbolo = getSpecialCharacterCount(token.getLexema());
-        
-        System.out.println("teste 4 " + reservada + simbolo);
 
+        //System.out.println("teste 4 " + reservada + simbolo);
         if (reservada) {
             token.setClasse("Palavra Reservada");
-        }
-        else if (simbolo) {
-            token.setClasse("Caractere Especial");
+        } else if (simbolo) {
+
+            String ce = token.getLexema();
+
+            if ("=".equals(ce)) {
+                token.setClasse("cEQ");
+            }
+            if ("(".equals(ce)) {
+                token.setClasse("cLPar");
+            }
+            if (")".equals(ce)) {
+                token.setClasse("cDPar");
+            }
+            if ("+".equals(ce)) {
+                token.setClasse("cAdd");
+            }
+            if ("-".equals(ce)) {
+                token.setClasse("cSub");
+            }
+            if ("/".equals(ce)) {
+                token.setClasse("cDiv");
+            }
+            if ("*".equals(ce)) {
+                token.setClasse("cMul");
+            }
+            if ("<".equals(ce)) {
+                token.setClasse("cLT");
+            }
+            if (">".equals(ce)) {
+                token.setClasse("cGT");
+            }
+            if (";".equals(ce)) {
+                token.setClasse("cPVir");
+            }
+            if (">=".equals(ce)) {
+                token.setClasse("cGE");
+            }
+            if ("<=".equals(ce)) {
+                token.setClasse("cLE");
+            }
+            if ("<>".equals(ce)) {
+                token.setClasse("cNE");
+            }
+            if (":=".equals(ce)) {
+                token.setClasse("cAtr");
+            }
+            //token.setClasse("Caractere Especial");
         } else {
             token.setClasse("cId");
         }
@@ -163,96 +207,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
         return false;
     }
-    
-    int indice=0;
-    public void analisadorSintaticoRecursivo(){
-        S(tokens.get(indice));
-    }
-    
-    public void S(Token t){
-        Rule(t);
-        S(t);
-    }
-    public void Rule(Token t){
-        Head(t);
-        Corpo(t);
-        indice++;
-        if(t.getLexema().equals('.')){
-            jTextAreaSaida.setText("ANALISE FEITA COM SUCESSO!");
-        }
-    }
-    public void Head(Token t){
-        if(IdPread(t)){
-            indice++;
-            t = tokens.get(indice);
-            Args(t);
-        }
-        else jTextAreaSaida.setText("ERRO SINTATICO!");
-    }
-    public boolean IdPread(Token t){
-        if(t.getLexema().equals('p')    ||  t.getLexema().equals('q')   ||  t.getLexema().equals('r') || t.getLexema().equals('s')){
-            return true;
-        }
-        else return false;
-    }
-    public void Args(Token t){
-        if(t.getLexema().equals('(')){
-            indice++;
-            t = tokens.get(indice);
-            idArg(t);
-            t = tokens.get(indice);
-            LArgs(t);
-        }
-        else jTextAreaSaida.setText("ERRO OPERANDO (");
-    }
-    public void idArg(Token t){
-        if(idVar(t)){
-           indice++;
-        }else if(Cons(t)){
-            indice++;
-        } else Head(t);
-    }
-    public boolean idVar(Token t){
-        if(t.getLexema().equals('X')    ||  t.getLexema().equals('Y')   ||  t.getLexema().equals('Z')){
-            return true;
-        }
-        else return false;
-    }
-    public boolean Cons(Token t){
-        if(t.getLexema().equals('a')    ||  t.getLexema().equals('b')   ||  t.getLexema().equals('c')   ||  t.getLexema().equals('d')   ||  t.getLexema().equals('e')){
-            return true;
-        }
-        else return false;
-    }
-    public void LArgs(Token t){
-        if(t.getLexema().equals(',')){
-            indice++;
-            t = tokens.get(indice);
-            idArg(t);
-            LArgs(t);
-        }
-        else jTextAreaSaida.setText("ERRO SINTATICO VIRGULA ,");
-    }
-    public void Corpo(Token t){
-        if(t.getLexema().equals(':')){
-            indice ++;
-            t = tokens.get(indice);
-            if(t.getLexema().equals('-')){
-                Head(t);
-                LCorpo(t);
-            }
-        } 
-    }
-    public void LCorpo(Token t){
-        if(t.getLexema().equals(',')){
-            indice++;
-            t = tokens.get(indice);
-            Head(t);
-            LCorpo(t);
-        }
-        else jTextAreaSaida.setText("ERRO SINTATICO");
-    }
-
 
     public TelaPrincipal() {
         initComponents();
@@ -608,8 +562,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 tam = linhas[i].length(); //tamanho da linha
 
                 for (j = 0; j < tam; j++) {
-                    if (linhas[i].charAt(j) != 32) {
-                        if (getSpecialCharacterCount(linhas[i].charAt(j)+"")) {
+                    if (linhas[i].charAt(j) != 32) { //verificando se o caractere eh diferente de um espaço
+
+                        // para verificar as combinaçoes <> >= <= :=
+                        if ((linhas[i].charAt(j) == ':' && linhas[i].charAt(j + 1) == '=' && j+1==tam-1)
+                                || (linhas[i].charAt(j) == '>' && linhas[i].charAt(j + 1) == '=' && j+1==tam-1)
+                                || (linhas[i].charAt(j) == '<' && linhas[i].charAt(j + 1) == '=' && j+1==tam-1)
+                                || (linhas[i].charAt(j) == '<' && linhas[i].charAt(j + 1) == '>') && j+1==tam-1) {
+
+                            lexema = lexema + linhas[i].charAt(j) + linhas[i].charAt(j + 1);
+                            j++;
+                            if (!"".equals(lexema)) {
+                                tk = new Token();
+                                tk.setLexema(lexema);
+                                tk.setLinha(i + 1);
+                                tk.setColuna(j + 1);
+                                tokens.add(tk);
+                                lexema = "";
+                            }
+                        } else if (getSpecialCharacterCount(linhas[i].charAt(j) + "")) {
                             if (!"".equals(lexema)) {
                                 tk = new Token();
                                 tk.setLexema(lexema);
@@ -651,9 +622,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
 
             for (Token token : tokens) {
-                
+
                 token.setLexema(token.getLexema().toLowerCase());
-                
+
                 if (token.getLexema().charAt(0) >= 48 && token.getLexema().charAt(0) <= 57) {
                     token = RotinaNumeros(token);
                     //tokens.get(i).setClasse(token.getClasse());
@@ -673,12 +644,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
             saida = saida + "ERRO - Digite o Código;\n";
             jTextAreaSaida.setText(saida);
         }
-        
-        analisadorSintaticoRecursivo();
-        indice=0;
-                
-        
-        
+
+
     }//GEN-LAST:event_jMenuItemCompilarActionPerformed
 
     /**
