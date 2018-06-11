@@ -309,7 +309,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPaneEdicao.addTab("Tabela de Símbolos", jPanel3);
+        jTabbedPaneEdicao.addTab("Itens Lexicos", jPanel3);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
