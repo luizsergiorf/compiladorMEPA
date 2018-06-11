@@ -45,6 +45,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     String simbolos = "+-*/=^<>()[]{}.,:;'#$"; //simbolos que devem ser reconhecidos
     char[] vetSimbolos = simbolos.toCharArray(); // vetor de char para acessar por char e comparar por posicao 
 
+    //TODAS AS PALAVRAS RESERVADAS
+    
     String TableReservada[]
             = {"and", "downto", "in", "packed", "to", "array", "else", "inline", "procedure", "type", "asm", "end", "interface",
                 "program", "unit", "begin", "file", "label", "record", "until", "case", "for", "mod", "repeat", "until", "const",
