@@ -131,9 +131,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         }
 
-        System.out.println("teste 3 " + token.getLexema());
         boolean reservada = palavraReservada(token.getLexema());
-        boolean simbolo = getSpecialCharacterCount(token.getLexema());
+        boolean simbolo = getSpecialCharacterCount(token.getLexema(),true);
 
         //System.out.println("teste 4 " + reservada + simbolo);
         if (reservada) {
@@ -196,24 +195,36 @@ public class TelaPrincipal extends javax.swing.JFrame {
         return token;
     }
 
-    public boolean getSpecialCharacterCount(String s) {
+    public boolean getSpecialCharacterCount(String s, boolean validaReal) {
         if (s == null || s.trim().isEmpty()) {
             System.out.println("Incorrect format of string");
             return false;
         }
-        Pattern p = Pattern.compile("[^A-Za-z0-9.]");
-        Matcher m = p.matcher(s);
-        boolean b = m.find();
-        if (b == true) {
-            return true;
+        Pattern p = Pattern.compile("[^A-Za-z0-9.]"); // aceita ponto
+        Pattern p2 = Pattern.compile("[^A-Za-z0-9]"); // não aceita ponto
+
+        if (validaReal) {
+            Matcher m = p.matcher(s);
+            boolean b = m.find();
+            if (b == true) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
+            Matcher m = p2.matcher(s);
+            boolean b = m.find();
+            if (b == true) {
+                return true;
+            } else {
+                return false;
+            }
         }
-        return false;
+
     }
 
     public TelaPrincipal() {
         initComponents();
-        System.out.println("TESTANDO GITHUB!!!");
     }
 
     /**
@@ -555,7 +566,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             String linhas[] = codigo.split("\n"); //divindo a string por linhas
             numerosLinhas = linhas.length; //numero de linhas
             boolean valida = true;
-
+            boolean validaReal = true;
             int i = 0;
             int j = 0;
             int tam = 0;
@@ -606,7 +617,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                     tokens.add(tk);
                                     lexema = "";
                                 }
-                            } else if (getSpecialCharacterCount(linhas[i].charAt(j) + "")) {
+                            } else if (getSpecialCharacterCount((linhas[i].charAt(j) + ""),validaReal)) {
                                 if (!"".equals(lexema)) {
                                     tk = new Token();
                                     tk.setLexema(lexema);
@@ -620,7 +631,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                 tk.setLinha(i + 1);
                                 tk.setColuna(j + 1);
                                 tokens.add(tk);
+                                validaReal=true; // reiniciando
                             } else {
+                                if(linhas[i].charAt(j)==46){ // ponto, se ja ocrrer 1 x ponto não deixa passar mais ponto
+                                    validaReal=false;
+                                }
                                 lexema = lexema + linhas[i].charAt(j);
                             }
                         } else {
@@ -633,7 +648,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                 tokens.add(tk);
                                 lexema = "";
                             }
-                            lexema="";
+                            lexema = "";
 
                         }
                     }
@@ -665,8 +680,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     token.setClasse(token.getClasse());
                     //tokens.get(i).setClasse(token.getClasse());
                 }
-
-                System.out.println("teste " + token.getClasse());
             }
             //System.out.println("CHEGOU AQUI");
             System.out.println("###TODOS TOKENS###\n" + tokens.toString());
