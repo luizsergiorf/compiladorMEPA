@@ -83,7 +83,10 @@ public class Identificador {
         this.endereco = endereco;
     }
     
-    
+    @Override
+    public String toString() {
+        return "TOKEN >> " + "lexema= " + lexema + ", classe= " + classe + ", endereco= " + endereco + "\n";
+    }
     
     
 }

@@ -13,6 +13,7 @@ import glazed.TokenTableFormat;
 import java.awt.Cursor;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
@@ -49,7 +50,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 "program", "unit", "begin", "file", "label", "record", "until", "case", "for", "mod", "repeat", "until", "const",
                 "foward", "nil", "set", "uses", "constructor", "function", "not", "shl", "var", "destructor", "goto", "object",
                 "shr", "while", "div", "if", "of", "string", "with", "do", "implementation", "or", "then", "xor", "shotint", "integer", "longint", "byte",
-                "word", "real", "single", "double", "extended", "comp", "string", "char", "boolean", "end.", "writeln"};
+                "word", "real", "single", "double", "extended", "comp", "string", "char", "boolean", "end.", "writeln", "readln", "read", "write"};
 
     //"char", "enumerado", "subintervalo", "string", "array", "record", "set", "file", "text", "pointer", "then", "begin", "functio", "do", "while", "longint
     public boolean pegarSimbolos(String palavra) {
@@ -147,6 +148,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
             String ce = token.getLexema();
 
             if (ce.charAt(0) == '"') {
+                token.setClasse("cStr");
+            }
+            if (ce.charAt(0) == '´') {
+                token.setClasse("cStr");
+            }
+            if (ce.charAt(0) == '\'') {
                 token.setClasse("cStr");
             }
             if (":".equals(ce)) {
@@ -269,6 +276,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabelExecutar = new javax.swing.JLabel();
+        jLabelCompilar = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuArquivo = new javax.swing.JMenu();
         jMenuItemNovo = new javax.swing.JMenuItem();
@@ -388,10 +396,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jTabbedPaneEdicao.getAccessibleContext().setAccessibleName("Edição");
 
-        jPanel4.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabelExecutar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/btnPlay.png"))); // NOI18N
-        jLabelExecutar.setToolTipText("");
+        jLabelExecutar.setToolTipText("Executar");
         jLabelExecutar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabelExecutarMouseEntered(evt);
@@ -404,12 +412,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jLabelCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/compilar.png"))); // NOI18N
+        jLabelCompilar.setToolTipText("Compilar");
+        jLabelCompilar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabelCompilarMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabelCompilarMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabelCompilar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabelExecutar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -417,7 +438,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelExecutar)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelCompilar)
+                    .addComponent(jLabelExecutar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -636,19 +659,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         if (linhas[i].charAt(j) > 32) { //verificando se o caractere eh diferente de um espaço ou tabulaçao
 
                             //para eliminar os comentarios
-                            if(linhas[i].charAt(j) == '{'){
-                                while(linhas[i].charAt(j) != '}'){
+                            if (linhas[i].charAt(j) == '{') {
+                                while (linhas[i].charAt(j) != '}') {
                                     j++;
                                 }
-                            }
-                            //para cadeia de string
-                            else if (linhas[i].charAt(j) == '"') {
+                            } //para cadeia de string
+                            else if (linhas[i].charAt(j) == '"' || linhas[i].charAt(j) == '\'' || linhas[i].charAt(j) == '´') {
                                 int cadeia = 0;
                                 while (cadeia != 2) {
 
                                     lexema = lexema + linhas[i].charAt(j);
 
-                                    if (linhas[i].charAt(j) == '"') {
+                                    if (linhas[i].charAt(j) == '"' || linhas[i].charAt(j) == '\'' || linhas[i].charAt(j) == '´') {
                                         cadeia++;
                                     }
                                     j++;
@@ -728,7 +750,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 }
 
             }
-            
+
             for (Token token : tokens) {
 
                 token.setLexema(token.getLexema().toLowerCase());
@@ -743,37 +765,47 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     //tokens.get(i).setClasse(token.getClasse());
                 }
             }
-            
+
             tk = new Token();
             tk.setLexema("Eof");
             tk.setClasse("cEof");
             tk.setLinha(i);
-            tk.setColuna(j+1);
+            tk.setColuna(j + 1);
             tokens.add(tk);
-            
-            
+
             //System.out.println("CHEGOU AQUI");
             System.out.println("###TODOS TOKENS###\n" + tokens.toString());
             jTextAreaSaida.append("LEXEMAS ENCONTRADOS!");
-            
-            
+
             //IDENTIFICADORES
-           /* int endereco = 0;
-            for(Token token : tokens){
-                if(token.getClasse().equals("cId")){
+            int endereco = 0;
+            boolean verifica=false; 
+            List<Identificador> identAux;
+            
+            for (Token token : tokens) {
+                if (token.getClasse().equals("cId")) {
                     
+                    ident = new Identificador();
                     ident.setLexema(token.getLexema());
                     ident.setClasse(token.getClasse());
                     ident.setNivel(0);
                     ident.setEndereco(endereco);
-                    System.out.println(ident); 
+                    System.out.println("teste ----- " + ident.toString());
                     
-                    identificadores.add(ident);
+                    for (Identificador aux : identificadores) {
+                        verifica=aux.getLexema().equals(ident.getLexema());  
+                        if(verifica){
+                            break;
+                        }
+                    }
+                    
+                    if(!verifica){
+                        identificadores.add(ident);
+                    }
+                    verifica=false;
                     endereco++;
-                    
                 }
             }
-            */
 
         } else {
             String saida = jTextAreaSaida.getText();
@@ -803,9 +835,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         ImageIcon II = new ImageIcon(getClass().getResource("/imagens/btnPlayPress.png"));
         jLabelExecutar.setIcon(II);
-        AnaliseLexica();
 
     }//GEN-LAST:event_jLabelExecutarMousePressed
+
+    private void jLabelCompilarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelCompilarMousePressed
+        // TODO add your handling code here:
+        ImageIcon II = new ImageIcon(getClass().getResource("/imagens/compilarPress.png"));
+        jLabelCompilar.setIcon(II);
+        AnaliseLexica();
+    }//GEN-LAST:event_jLabelCompilarMousePressed
+
+    private void jLabelCompilarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelCompilarMouseExited
+        // TODO add your handling code here:
+        ImageIcon II = new ImageIcon(getClass().getResource("/imagens/compilar.png"));
+        jLabelCompilar.setIcon(II);
+    }//GEN-LAST:event_jLabelCompilarMouseExited
 
     /**
      * @param args the command line arguments
@@ -843,6 +887,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabelCompilar;
     private javax.swing.JLabel jLabelExecutar;
     private javax.swing.JMenu jMenuArquivo;
     private javax.swing.JMenuBar jMenuBar1;
