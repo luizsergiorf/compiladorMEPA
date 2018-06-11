@@ -142,6 +142,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
             String ce = token.getLexema();
 
+            if (ce.charAt(0) == '"') {
+                token.setClasse("cStr");
+            }
             if ("=".equals(ce)) {
                 token.setClasse("cEQ");
             }
@@ -560,27 +563,68 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
             for (i = 0; i < numerosLinhas; i++) {
                 tam = linhas[i].length(); //tamanho da linha
+                try {
+                    for (j = 0; j < tam; j++) {
 
-                for (j = 0; j < tam; j++) {
-                    if (linhas[i].charAt(j) != 32) { //verificando se o caractere eh diferente de um espaço
+                        if (linhas[i].charAt(j) != 32) { //verificando se o caractere eh diferente de um espaço
 
-                        // para verificar as combinaçoes <> >= <= :=
-                        if ((linhas[i].charAt(j) == ':' && linhas[i].charAt(j + 1) == '=' && j+1==tam-1)
-                                || (linhas[i].charAt(j) == '>' && linhas[i].charAt(j + 1) == '=' && j+1==tam-1)
-                                || (linhas[i].charAt(j) == '<' && linhas[i].charAt(j + 1) == '=' && j+1==tam-1)
-                                || (linhas[i].charAt(j) == '<' && linhas[i].charAt(j + 1) == '>') && j+1==tam-1) {
+                            //para cadeia de string
+                            if (linhas[i].charAt(j) == '"') {
+                                int cadeia = 0;
+                                while (cadeia != 2) {
 
-                            lexema = lexema + linhas[i].charAt(j) + linhas[i].charAt(j + 1);
-                            j++;
-                            if (!"".equals(lexema)) {
+                                    lexema = lexema + linhas[i].charAt(j);
+
+                                    if (linhas[i].charAt(j) == '"') {
+                                        cadeia++;
+                                    }
+                                    j++;
+                                }
+                                j--;
+                                if (!"".equals(lexema)) {
+                                    tk = new Token();
+                                    tk.setLexema(lexema);
+                                    tk.setLinha(i + 1);
+                                    tk.setColuna(j + 1);
+                                    tokens.add(tk);
+                                    lexema = "";
+                                }
+
+                            } // para verificar as combinaçoes <> >= <= :=
+                            else if ((linhas[i].charAt(j) == ':' && linhas[i].charAt(j + 1) == '=' && j + 1 != tam)
+                                    || (linhas[i].charAt(j) == '>' && linhas[i].charAt(j + 1) == '=' && j + 1 != tam)
+                                    || (linhas[i].charAt(j) == '<' && linhas[i].charAt(j + 1) == '=' && j + 1 != tam)
+                                    || (linhas[i].charAt(j) == '<' && linhas[i].charAt(j + 1) == '>') && j + 1 != tam) {
+
+                                lexema = lexema + linhas[i].charAt(j) + linhas[i].charAt(j + 1);
+                                j++;
+                                if (!"".equals(lexema)) {
+                                    tk = new Token();
+                                    tk.setLexema(lexema);
+                                    tk.setLinha(i + 1);
+                                    tk.setColuna(j + 1);
+                                    tokens.add(tk);
+                                    lexema = "";
+                                }
+                            } else if (getSpecialCharacterCount(linhas[i].charAt(j) + "")) {
+                                if (!"".equals(lexema)) {
+                                    tk = new Token();
+                                    tk.setLexema(lexema);
+                                    tk.setLinha(i + 1);
+                                    tk.setColuna(j - lexema.length() + 1);
+                                    tokens.add(tk);
+                                    lexema = "";
+                                }
                                 tk = new Token();
-                                tk.setLexema(lexema);
+                                tk.setLexema(linhas[i].charAt(j) + "");
                                 tk.setLinha(i + 1);
                                 tk.setColuna(j + 1);
                                 tokens.add(tk);
-                                lexema = "";
+                            } else {
+                                lexema = lexema + linhas[i].charAt(j);
                             }
-                        } else if (getSpecialCharacterCount(linhas[i].charAt(j) + "")) {
+                        } else {
+
                             if (!"".equals(lexema)) {
                                 tk = new Token();
                                 tk.setLexema(lexema);
@@ -589,26 +633,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                 tokens.add(tk);
                                 lexema = "";
                             }
-                            tk = new Token();
-                            tk.setLexema(linhas[i].charAt(j) + "");
-                            tk.setLinha(i + 1);
-                            tk.setColuna(j + 1);
-                            tokens.add(tk);
-                        } else {
-                            lexema = lexema + linhas[i].charAt(j);
-                        }
-                    } else {
+                            lexema="";
 
-                        if (!"".equals(lexema)) {
-                            tk = new Token();
-                            tk.setLexema(lexema);
-                            tk.setLinha(i + 1);
-                            tk.setColuna(j - lexema.length() + 1);
-                            tokens.add(tk);
-                            lexema = "";
                         }
-
                     }
+
+                } catch (Exception e) {
+                    jTextAreaSaida.setText("ERRO NA SINTAXE DO CODIGO! - LINHA " + (i + 1));
                 }
                 if (!"".equals(lexema)) {
                     tk = new Token();
