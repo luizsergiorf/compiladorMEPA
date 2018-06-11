@@ -224,6 +224,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public TelaPrincipal() {
+        System.out.println("TESTE GUIT LUIZ");
         initComponents();
     }
 
