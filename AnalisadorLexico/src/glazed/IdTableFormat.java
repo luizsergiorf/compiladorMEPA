@@ -22,7 +22,7 @@ public class IdTableFormat implements TableFormat<Identificador>{
             case 0:
                 return "Lexema";
             case 1:
-                return "Classe";
+                return "Categoria";
             case 2:
                 return "Nivel";
             case 3:

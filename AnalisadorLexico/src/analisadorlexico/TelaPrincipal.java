@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import other.FiltroDeArquivos;
 import other.UtilidadesArquivos;
 
@@ -41,6 +42,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private EventList<Identificador> identificadores = new BasicEventList<>();
     Token tk = new Token();
     Identificador ident = new Identificador();
+    
+    
 
     String simbolos = "+-*/=^<>()[]{}.,:;'#$"; //simbolos que devem ser reconhecidos
     char[] vetSimbolos = simbolos.toCharArray(); // vetor de char para acessar por char e comparar por posicao 
@@ -279,6 +282,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabelExecutar = new javax.swing.JLabel();
         jLabelCompilar = new javax.swing.JLabel();
+        jLabelInfo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuArquivo = new javax.swing.JMenu();
         jMenuItemNovo = new javax.swing.JMenuItem();
@@ -304,6 +308,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Resultado / (SAIDA)"));
 
+        jTextAreaSaida.setEditable(false);
         jTextAreaSaida.setColumns(20);
         jTextAreaSaida.setRows(5);
         jScrollPane2.setViewportView(jTextAreaSaida);
@@ -341,7 +346,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addContainerGap(170, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,7 +368,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(449, Short.MAX_VALUE))
+                .addContainerGap(488, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -425,6 +430,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jLabelInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/ajudabtn.png"))); // NOI18N
+        jLabelInfo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabelInfoMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabelInfoMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -434,13 +449,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabelCompilar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabelExecutar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelInfo)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelInfo)
                     .addComponent(jLabelCompilar)
                     .addComponent(jLabelExecutar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -524,6 +542,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jMenuSobre.setText("Sobre");
 
+        jMenuItemProjeto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/infoicon.png"))); // NOI18N
         jMenuItemProjeto.setText("Projeto");
         jMenuItemProjeto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -853,6 +872,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabelCompilar.setIcon(II);
     }//GEN-LAST:event_jLabelCompilarMouseExited
 
+    private void jLabelInfoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelInfoMousePressed
+        // TODO add your handling code here:
+        ImageIcon II = new ImageIcon(getClass().getResource("/imagens/ajudabtnpress.png"));
+        jLabelInfo.setIcon(II);
+    }//GEN-LAST:event_jLabelInfoMousePressed
+
+    private void jLabelInfoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelInfoMouseExited
+        // TODO add your handling code here:
+        ImageIcon II = new ImageIcon(getClass().getResource("/imagens/ajudabtn.png"));
+        jLabelInfo.setIcon(II);
+    }//GEN-LAST:event_jLabelInfoMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -891,6 +922,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelCompilar;
     private javax.swing.JLabel jLabelExecutar;
+    private javax.swing.JLabel jLabelInfo;
     private javax.swing.JMenu jMenuArquivo;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuEditar;
