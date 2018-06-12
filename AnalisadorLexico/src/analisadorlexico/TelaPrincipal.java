@@ -36,20 +36,24 @@ public class TelaPrincipal extends javax.swing.JFrame {
     String conteudo = "";
     String linguagem = "";
 
+    Token tokenAux;
+    boolean validaCompila;
+    int indexToken;
+    int indexIdentificador;
+
     int tamanhoTabela = 68;
     int numerosLinhas = 0;
     private EventList<Token> tokens = new BasicEventList<>();
     private EventList<Identificador> identificadores = new BasicEventList<>();
+    private EventList<Mepa> codigoMepa = new BasicEventList<>();
+
     Token tk = new Token();
     Identificador ident = new Identificador();
-    
-    
 
     String simbolos = "+-*/=^<>()[]{}.,:;'#$"; //simbolos que devem ser reconhecidos
     char[] vetSimbolos = simbolos.toCharArray(); // vetor de char para acessar por char e comparar por posicao 
 
     //TODAS AS PALAVRAS RESERVADAS
-    
     String TableReservada[]
             = {"and", "downto", "in", "packed", "to", "array", "else", "inline", "procedure", "type", "asm", "end", "interface",
                 "program", "unit", "begin", "file", "label", "record", "until", "case", "for", "mod", "repeat", "until", "const",
@@ -279,6 +283,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        textMepa = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jLabelExecutar = new javax.swing.JLabel();
         jLabelCompilar = new javax.swing.JLabel();
@@ -375,10 +382,33 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jTabbedPaneEdicao.addTab("Tabela de Símbolos", jPanel5);
+
+        textMepa.setColumns(20);
+        textMepa.setRows(5);
+        jScrollPane6.setViewportView(textMepa);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(350, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(91, Short.MAX_VALUE))
+        );
+
+        jTabbedPaneEdicao.addTab("tab4", jPanel6);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -652,7 +682,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         conteudo = "";
     }//GEN-LAST:event_jMenuItemNovoActionPerformed
 
-    public void AnaliseLexica() {
+    public void analiseLexica() {
         tokens.clear();
         identificadores.clear();
         jTextAreaSaida.setText("");
@@ -800,30 +830,30 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
             //IDENTIFICADORES
             int endereco = 0;
-            boolean verifica=false; 
+            boolean verifica = false;
             List<Identificador> identAux;
-            
+
             for (Token token : tokens) {
                 if (token.getClasse().equals("cId")) {
-                    
+
                     ident = new Identificador();
                     ident.setLexema(token.getLexema());
                     ident.setClasse(token.getClasse());
                     ident.setNivel(0);
                     ident.setEndereco(endereco);
                     System.out.println("teste ----- " + ident.toString());
-                    
+
                     for (Identificador aux : identificadores) {
-                        verifica=aux.getLexema().equals(ident.getLexema());  
-                        if(verifica){
+                        verifica = aux.getLexema().equals(ident.getLexema());
+                        if (verifica) {
                             break;
                         }
                     }
-                    
-                    if(!verifica){
+
+                    if (!verifica) {
                         identificadores.add(ident);
                     }
-                    verifica=false;
+                    verifica = false;
                     endereco++;
                 }
             }
@@ -835,10 +865,59 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
+    public void analiseSintatica() {
+        indexToken = 0;
+        indexIdentificador = 0;
+        program();
+    }
+
+    public void program() {
+
+        while (indexToken < tokens.size()) {
+
+            tokenAux = tokens.get(indexToken); // pegando lexema 
+            validaCompila = tokenAux.getLexema().equals("program");
+
+            if (validaCompila) {
+                indexToken++;
+                tokenAux = tokens.get(indexToken); // atualizar lexama
+                validaCompila = tokenAux.getClasse().equals("cId");
+
+                if (validaCompila) {
+                    acao1();
+                    indexToken++;
+                    tokenAux = tokens.get(indexToken); // atualzia lexama
+                }
+
+            }
+            if (!validaCompila) {
+                System.out.println("error");
+                break;
+            }
+
+            indexToken++;
+        }
+    }
+
+    public void acao1() {
+        identificadores.get(indexIdentificador).setClasse("program");
+        Geracode(null, "INPP", null);
+
+    }
+
+    public void Geracode(String Rot, String Inst, String K) {
+        Mepa mepaAux;
+        mepaAux = new Mepa();
+        mepaAux.setInstrucao(Inst);
+        mepaAux.setK(K);
+        mepaAux.setRot(Rot);
+        codigoMepa.add(mepaAux);
+    }
 
     private void jMenuItemCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCompilarActionPerformed
         //A PARTE DIFICIL
-        AnaliseLexica();
+        analiseLexica();
+        analiseSintatica();
     }//GEN-LAST:event_jMenuItemCompilarActionPerformed
 
     private void jLabelExecutarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelExecutarMouseEntered
@@ -863,7 +942,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         ImageIcon II = new ImageIcon(getClass().getResource("/imagens/compilarPress.png"));
         jLabelCompilar.setIcon(II);
-        AnaliseLexica();
+        analiseLexica();
+        analiseSintatica();
     }//GEN-LAST:event_jLabelCompilarMousePressed
 
     private void jLabelCompilarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelCompilarMouseExited
@@ -943,14 +1023,17 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPaneEdicao;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea;
     private javax.swing.JTextArea jTextAreaSaida;
+    private javax.swing.JTextArea textMepa;
     // End of variables declaration//GEN-END:variables
 }
