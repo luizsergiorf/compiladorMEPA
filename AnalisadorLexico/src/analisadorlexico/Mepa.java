@@ -71,7 +71,7 @@ public class Mepa {
 
     @Override
     public String toString() {
-        return "Mepa{" + "Rot=" + Rot + ", instrucao=" + instrucao + ", K=" + K + '}';
+        return "Mepa{" + "Rot=" + Rot + ", instrucao=" + instrucao + ", K=" + K + '}' + "\n";
     }
     
 }

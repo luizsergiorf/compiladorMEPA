@@ -247,6 +247,9 @@
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Monospaced" size="14" style="0"/>
+                    </Property>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
                 </Component>
@@ -281,7 +284,11 @@
                       <Color blue="cc" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="columns" type="int" value="20"/>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Monospaced" size="16" style="0"/>
+                    </Property>
                     <Property name="rows" type="int" value="5"/>
+                    <Property name="text" type="java.lang.String" value="Program Somatorio&#xa;Var&#xa;&#x9;Ini, Fim, Conta, Soma : integer;&#xa;Begin&#xa;&#x9;Ini := 0;&#xa;&#x9;Fim := 0;&#xa;&#x9;Soma := 0;&#xa;&#x9;read( Ini, Fim );&#xa;&#x9;Soma := Ini + Fim;&#xa;&#x9;write( Soma );&#xa;End."/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -387,8 +394,8 @@
             <Container class="javax.swing.JPanel" name="jPanel6">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="tab4">
-                    <Property name="tabTitle" type="java.lang.String" value="tab4"/>
+                  <JTabbedPaneConstraints tabName="MEPA">
+                    <Property name="tabTitle" type="java.lang.String" value="MEPA"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -423,6 +430,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JTextArea" name="textMepa">
                       <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
                         <Property name="columns" type="int" value="20"/>
                         <Property name="rows" type="int" value="5"/>
                       </Properties>
@@ -501,6 +509,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagens/ajudabtn.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Ajuda"/>
           </Properties>
           <Events>
             <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabelInfoMouseExited"/>
