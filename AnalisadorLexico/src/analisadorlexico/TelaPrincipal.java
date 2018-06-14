@@ -44,7 +44,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     int Addr = 0; //endereço da pilha mepa
     String opMul;
     String opAd;
-    int S = 0; // Variável cujo objetivo é determinar o endereço para uma variável na Pilha de Dados
+    int S = -1; // Variável cujo objetivo é determinar o endereço para uma variável na Pilha de Dados
     int R = 0; // Variável cujo objetivo é determinar um endereço para um rótulo na Pilha de Código
     int RotFor = 0;
     int RotEnd = 0;
@@ -242,7 +242,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             System.out.println("Incorrect format of string");
             return false;
         }
-        Pattern p = Pattern.compile("[^A-Za-z0-9._áéíóúâêîôûç]"); // aceita ponto
+        Pattern p = Pattern.compile("[^A-Za-z0-9.]"); // aceita ponto
         Pattern p2 = Pattern.compile("[^A-Za-z0-9]"); // não aceita ponto
 
         if (validaReal) {
@@ -326,7 +326,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jTextAreaSaida.setEditable(false);
         jTextAreaSaida.setColumns(20);
-        jTextAreaSaida.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        jTextAreaSaida.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
         jTextAreaSaida.setRows(5);
         jScrollPane2.setViewportView(jTextAreaSaida);
 
@@ -339,16 +339,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jTextArea.setBackground(new java.awt.Color(255, 253, 222));
         jTextArea.setColumns(20);
         jTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
         jTextArea.setRows(5);
-        jTextArea.setText("Program Somatorio\nVar\n\tIni, Fim, Conta, Soma : integer;\nBegin\n\tIni := 0;\n\tFim := 0;\n\tSoma := 0;\n\tread( Ini, Fim );\n\tSoma := Ini + Fim;\n\twrite( Soma );\nEnd.");
+        jTextArea.setText("Program Somatorio\nVar\n\ta, q : integer;\nBegin\t\n\n\tif(q >= 5) then\n\tbegin\n\t\ta := 1;\n\tend\n\telse\n\tbegin\n\t\ta := 2;\n\tend\nEnd.");
         jScrollPane1.setViewportView(jTextArea);
 
         jTabbedPaneEdicao.addTab("Fonte", jScrollPane1);
@@ -429,7 +428,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPaneEdicao)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -437,9 +436,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jTabbedPaneEdicao, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(44, 44, 44))
         );
 
         jTabbedPaneEdicao.getAccessibleContext().setAccessibleName("Edição");
@@ -610,7 +609,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 633, Short.MAX_VALUE))
         );
 
         pack();
@@ -755,8 +754,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                     || (linhas[i].charAt(j) == '<' && linhas[i].charAt(j + 1) == '=' && j + 1 != tam)
                                     || (linhas[i].charAt(j) == '<' && linhas[i].charAt(j + 1) == '>') && j + 1 != tam) {
 
-                                lexema = lexema + linhas[i].charAt(j) + linhas[i].charAt(j + 1);
+                                if (!"".equals(lexema)) {
+
+                                    tk = new Token();
+                                    tk.setLexema(lexema);
+                                    tk.setLinha(i + 1);
+                                    tk.setColuna(j + 1);
+                                    tokens.add(tk);
+                                    lexema = "";
+                                } else {
+                                    lexema = "";
+                                }
+
+                                lexema = lexema + linhas[i].charAt(j) + linhas[i].charAt(j + 1) + "";
                                 j++;
+
                                 if (!"".equals(lexema)) {
                                     tk = new Token();
                                     tk.setLexema(lexema);
@@ -906,6 +918,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         indexToken = 0;
         indexIdentificador = 0;
         codigoMepa.clear();
+        end = 0;
 
         Addr = 0; //endereço da pilha mepa
         opMul = "";
@@ -937,6 +950,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 //ir para funcao corpo
                 corpo();
 
+                if (tokenAux.getLexema().equals("end")) {
+                    indexToken++;
+                    tokenAux = tokens.get(indexToken); // atualzia lexama
+                }
+
                 if (tokenAux.getLexema().equals(".")) {
                     jTextAreaSaida.setBackground(new java.awt.Color(188, 255, 233)); //setando cor se o codigo deu certo
                     System.out.println("FIM DO CODIGO!");
@@ -959,9 +977,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         identificadores.get(indexIdentificador).setClasse("function");
         Geracode(null, "INPP", null);
         S = -1;
-        R = 0;
+        //R = 0;
         indexIdentificador++;
     }
+
+    int end = 0;
 
     public void Geracode(String Rot, String Inst, String K) {
         Mepa mepaAux;
@@ -969,6 +989,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         mepaAux.setInstrucao(Inst);
         mepaAux.setK(K);
         mepaAux.setRot(Rot);
+        mepaAux.setEndereco(end);
+        end++;
         codigoMepa.add(mepaAux); //adicionando ao MEPA
         //textMepa.setText(codigoMepa.toString());
     }
@@ -987,6 +1009,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             } else {
                 indexToken++;
                 tokenAux = tokens.get(indexToken); // começar com a <sentencas>
+                System.out.println("teste 3- " + tokenAux.toString());
             }
 
         } else {
@@ -999,6 +1022,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         comando();
         //System.out.println("CHEGUEI NO PV - " + tokenAux.toString());
         mais_sentencas();
+        System.out.println("teste  2- " + tokenAux.toString());
     }
 
     public void mais_sentencas() {
@@ -1072,6 +1096,60 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         } else if (tokenAux.getLexema().equals("if")) {
 
+            //ESTA FUNCIONANDO PERFEITAMENTE
+            indexToken++;
+            tokenAux = tokens.get(indexToken); // começar com a
+            //verificando se abriu parenteses
+            if (tokenAux.getLexema().equals("(")) {
+
+                indexToken++;
+                tokenAux = tokens.get(indexToken);
+
+                condicao();
+
+                if (tokenAux.getLexema().equals(")")) {
+                    acao17();
+
+                    indexToken++;
+                    tokenAux = tokens.get(indexToken);
+
+                    if (tokenAux.getLexema().equals("then")) {
+                        indexToken++;
+                        tokenAux = tokens.get(indexToken);
+
+                        if (tokenAux.getLexema().equals("begin")) {
+                            indexToken++;
+                            tokenAux = tokens.get(indexToken);
+                            sentencas();
+
+                            if (tokenAux.getLexema().equals("end")) {
+                                acao18();
+                                pfalsa();
+                                acao19();
+
+                                System.out.println("teste - " + tokenAux.toString());
+                            } else {
+                                System.out.println("Error - Declarar palavra reservada then.");
+                                jTextAreaSaida.append("Error - Declarar palavra reservada then.    LINHA = " + tokenAux.getLinha() + "\n");
+                            }
+                        } else {
+                            System.out.println("Error - Declarar palavra reservada begin.");
+                            jTextAreaSaida.append("Error - Declarar palavra reservada begin.    LINHA = " + tokenAux.getLinha() + "\n");
+                        }
+                    } else {
+                        System.out.println("Error - Declarar palavra reservada then.");
+                        jTextAreaSaida.append("Error - Declarar palavra reservada then.    LINHA = " + tokenAux.getLinha() + "\n");
+                    }
+
+                } else {
+                    System.out.println("Error - Fechar parenteses.");
+                    jTextAreaSaida.append("Error - Fechar parenteses.    LINHA = " + tokenAux.getLinha() + "\n");
+                }
+            } else {
+                System.out.println("Error - Abrir parenteses.");
+                jTextAreaSaida.append("Error - Abrir parenteses.    LINHA = " + tokenAux.getLinha() + "\n");
+            }
+
         } //o unico diferente... ele verifica se for um identificador
         else if (tokenAux.getClasse().equals("cId")) {
 
@@ -1101,6 +1179,106 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
+    public void pfalsa() {
+        //System.out.println("ELSE - " + tokenAux.toString());
+        indexToken++;
+        tokenAux = tokens.get(indexToken);//atualizando
+
+        if (tokenAux.getLexema().equals("else")) {
+            indexToken++;
+            tokenAux = tokens.get(indexToken);//atualizando
+            if (tokenAux.getLexema().equals("begin")) {
+
+                indexToken++;
+                tokenAux = tokens.get(indexToken);
+                sentencas();
+
+                if (!tokenAux.getLexema().equals("end")) {
+                    System.out.println("Error - Declarar palavra reservada end.");
+                    jTextAreaSaida.append("Error - Declarar palavra reservada end.  LINHA = " + tokenAux.getLinha() + "\n");
+                }
+
+            } else {
+                System.out.println("Error - Declarar palavra reservada begin.");
+                jTextAreaSaida.append("Error - Declarar palavra reservada begin.  LINHA = " + tokenAux.getLinha() + "\n");
+            }
+        }
+
+    }
+
+    public void condicao() {
+        expressao();
+
+        relacao();
+        acao15();
+        indexToken++;
+        tokenAux = tokens.get(indexToken);//atualizando
+        expressao();
+        acao16();
+    }
+
+    String rel;
+
+    public void acao15() {
+        rel = tokenAux.getLexema();
+    }
+
+    public void acao16() {
+
+        if (rel.equals("=")) {
+            Geracode(null, "CMIG", null);
+        }
+        if (rel.equals("<")) {
+            Geracode(null, "CMME", null);
+        }
+        if (rel.equals(">")) {
+            Geracode(null, "CMMA", null);
+        }
+        if (rel.equals("<=")) {
+            Geracode(null, "CMEG", null);
+        }
+        if (rel.equals(">=")) {
+            Geracode(null, "CMAG", null);
+        }
+        if (rel.equals("<>")) {
+            Geracode(null, "CMDG", null);
+        }
+    }
+
+    int rotElse, rotEnd;
+
+    public void acao17() {
+        rotElse = GerarRotulo();
+        rotEnd = GerarRotulo();
+        Geracode(null, "DSVF", rotElse + "ROT");
+    }
+
+    public void acao18() {
+        Geracode(null, "DSVS", rotEnd + "");
+        Geracode(rotElse + "", "NADA", null);
+    }
+
+    public void acao19() {
+        Geracode(rotEnd + "", "NADA", null);
+    }
+
+    public void relacao() {
+        if (!tokenAux.getLexema().equals("=")) {
+            if (!tokenAux.getLexema().equals(">")) {
+                if (!tokenAux.getLexema().equals("<")) {
+                    if (!tokenAux.getLexema().equals(">=")) {
+                        if (!tokenAux.getLexema().equals("<=")) {
+                            if (!tokenAux.getLexema().equals("<>")) {
+                                System.out.println("Error - Declarar operador de comparação.");
+                                jTextAreaSaida.append("Error - Declarar operador de comparação.  LINHA = " + tokenAux.getLinha() + "\n");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void acao13() {
         indexIdentificador = 0;
         for (Identificador i : identificadores) {
@@ -1120,7 +1298,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public void acao14() {
-        Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
+        Geracode(null, "ARMZ", identificadores.get(Addr).getEndereco() + "");
     }
 
     public void acao20() {
@@ -1130,7 +1308,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public void acao21() {
-        Geracode(null, "DSVF", RotEnd + "");
+        Geracode(null, "DSVF", RotEnd + "ROT");
     }
 
     public void acao22() {
@@ -1152,7 +1330,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     public void acao28() {
         Geracode(null, "CMEG", null);
-        Geracode(null, "DSVF", RotEnd + "");
+        Geracode(null, "DSVF", RotEnd + "ROT");
     }
 
     public void acao29() {
@@ -1160,7 +1338,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Geracode(null, "CRCT", "1");
         Geracode(null, "SOMA", null);
         Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
-        Geracode(null, "DSVF", RotFor + "");
+        Geracode(null, "DSVF", RotFor + "ROT");
         Geracode(RotEnd + "", "NADA", null);
     }
 
@@ -1592,7 +1770,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(TelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */

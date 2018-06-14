@@ -11,6 +11,7 @@ package analisadorlexico;
  */
 public class Mepa {
 
+    private int endereco;
     private String Rot;
     private String instrucao;
     private String K;
@@ -61,6 +62,16 @@ public class Mepa {
      */
     public void setK(String K) {
         this.K = K;
+    }
+    
+    
+     public int getEndereco() {
+        return endereco;
+    }
+
+
+    public void setEndereco(int endereco) {
+        this.endereco = endereco;
     }
 
     public Mepa(String Rot, String instrucao, String K) {
