@@ -44,11 +44,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
     int Addr = 0; //endereço da pilha mepa
     String opMul;
     String opAd;
-    int S = -1; // Variável cujo objetivo é determinar o endereço para uma variável na Pilha de Dados
+    int S = 0; // Variável cujo objetivo é determinar o endereço para uma variável na Pilha de Dados
     int R = 0; // Variável cujo objetivo é determinar um endereço para um rótulo na Pilha de Código
     int RotFor = 0;
     int RotEnd = 0;
     int RotWhile = 0;
+    int RotRepeat = 0;
+    String rel;
+    int RotElse = 0;
 
     int tamanhoTabela = 68;
     int numerosLinhas = 0;
@@ -242,7 +245,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             System.out.println("Incorrect format of string");
             return false;
         }
-        Pattern p = Pattern.compile("[^A-Za-z0-9.]"); // aceita ponto
+        Pattern p = Pattern.compile("[^A-Za-z0-9._]"); // aceita ponto
         Pattern p2 = Pattern.compile("[^A-Za-z0-9]"); // não aceita ponto
 
         if (validaReal) {
@@ -347,7 +350,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTextArea.setColumns(20);
         jTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
         jTextArea.setRows(5);
-        jTextArea.setText("Program Somatorio\nVar\n\ta, q : integer;\nBegin\t\n\n\tif(q >= 5) then\n\tbegin\n\t\ta := 1;\n\tend\n\telse\n\tbegin\n\t\ta := 2;\n\tend\nEnd.");
+        jTextArea.setText("Program teste_compiladores\nVar\n\ta, q, soma : integer;\nBegin\t\n\tread(a);\n\twrite(q);\n\n\tsoma:= a + q;\n\tread(a);\n\n\trepeat\n\t\tsoma := soma - 1;\n\tuntil (a<q);\n\n\tif(a<q) then\n\tbegin\n\t\tsoma:= a * q;\n\tend\n\telse\n\tbegin\n\t\tq := q;\n\tend\n\t\n\ta := soma;\nEnd.");
         jScrollPane1.setViewportView(jTextArea);
 
         jTabbedPaneEdicao.addTab("Fonte", jScrollPane1);
@@ -950,11 +953,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 //ir para funcao corpo
                 corpo();
 
-                if (tokenAux.getLexema().equals("end")) {
-                    indexToken++;
-                    tokenAux = tokens.get(indexToken); // atualzia lexama
-                }
-
+                //if (tokenAux.getLexema().equals("end")) {
+                //    indexToken++;
+                //    tokenAux = tokens.get(indexToken); // atualzia lexama
+                //}
                 if (tokenAux.getLexema().equals(".")) {
                     jTextAreaSaida.setBackground(new java.awt.Color(188, 255, 233)); //setando cor se o codigo deu certo
                     System.out.println("FIM DO CODIGO!");
@@ -977,11 +979,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         identificadores.get(indexIdentificador).setClasse("function");
         Geracode(null, "INPP", null);
         S = -1;
-        //R = 0;
+        R = 0;
         indexIdentificador++;
     }
 
-    int end = 0;
+    int end = 0; //endereco MEPA
 
     public void Geracode(String Rot, String Inst, String K) {
         Mepa mepaAux;
@@ -1004,12 +1006,17 @@ public class TelaPrincipal extends javax.swing.JFrame {
             sentencas();
 
             if (!tokenAux.getLexema().equals("end")) {
-                System.out.println("Error - Declarar end fim do codigo.");
-                jTextAreaSaida.append("Error - Declarar end fim do codigo.  LINHA = " + tokenAux.getLinha() + "\n");
+
+                System.out.println(" TESTE - " + tokenAux.toString());
+
+                System.out.println("Error - Declarar end ou ; no codigo.");
+                jTextAreaSaida.append("Error - Declarar end ou ; no codigo.  LINHA = " + tokenAux.getLinha() + "\n");
             } else {
+
                 indexToken++;
                 tokenAux = tokens.get(indexToken); // começar com a <sentencas>
-                System.out.println("teste 3- " + tokenAux.toString());
+
+                System.out.println("TESTE 1 - " + tokenAux.toString());
             }
 
         } else {
@@ -1020,9 +1027,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     public void sentencas() {
         comando();
-        //System.out.println("CHEGUEI NO PV - " + tokenAux.toString());
+        System.out.println("CHEGUEI NO PV - " + tokenAux.toString());
         mais_sentencas();
-        System.out.println("teste  2- " + tokenAux.toString());
     }
 
     public void mais_sentencas() {
@@ -1032,6 +1038,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tokenAux = tokens.get(indexToken); // começar com a <sentencas>
             cont_sentencas();
             //System.out.println("ONDE ESTOU = " + tokenAux.toString());
+        } else {
         }
     }
 
@@ -1091,6 +1098,41 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         } //FOR FUNCIONANDO
         else if (tokenAux.getLexema().equals("repeat")) {
+            acao23();
+
+            indexToken++;
+            tokenAux = tokens.get(indexToken);
+            sentencas();
+            if (tokenAux.getLexema().equals("until")) {
+                indexToken++;
+                tokenAux = tokens.get(indexToken);
+                if (tokenAux.getLexema().equals("(")) {
+
+                    indexToken++;
+                    tokenAux = tokens.get(indexToken);
+
+                    condicao();
+
+                    if (tokenAux.getLexema().equals(")")) {
+
+                        acao24();
+                        indexToken++;
+                        tokenAux = tokens.get(indexToken);
+                    } else {
+                        System.out.println("Error - Fechar parenteses (.");
+                        jTextAreaSaida.append("Error - Fechar parenteses (.    LINHA = " + tokenAux.getLinha() + "\n");
+                    }
+
+                } else {
+                    System.out.println("Error - Abrir parenteses (.");
+                    jTextAreaSaida.append("Error - Abrir parenteses (.    LINHA = " + tokenAux.getLinha() + "\n");
+                }
+
+            } else {
+                System.out.println("Error - Declarar palavra reservada until.");
+                jTextAreaSaida.append("Error - Declarar palavra reservada until.    LINHA = " + tokenAux.getLinha() + "\n");
+
+            }
 
         } else if (tokenAux.getLexema().equals("while")) {
 
@@ -1127,10 +1169,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                 pfalsa();
                                 acao19();
 
-                                System.out.println("teste - " + tokenAux.toString());
+                                indexToken++;
+                                tokenAux = tokens.get(indexToken);
+
                             } else {
-                                System.out.println("Error - Declarar palavra reservada then.");
-                                jTextAreaSaida.append("Error - Declarar palavra reservada then.    LINHA = " + tokenAux.getLinha() + "\n");
+                                System.out.println("Error - Declarar palavra reservada end.");
+                                jTextAreaSaida.append("Error - Declarar palavra reservada end.    LINHA = " + tokenAux.getLinha() + "\n");
                             }
                         } else {
                             System.out.println("Error - Declarar palavra reservada begin.");
@@ -1172,17 +1216,27 @@ public class TelaPrincipal extends javax.swing.JFrame {
         } else if (tokenAux.getLexema().equals("end")) {
 
         } else {
-            System.out.println("ALGUM ERRO- " + tokenAux.toString());
-
-            System.out.println("Error - Declarar variavel ou metodo.");
-            jTextAreaSaida.append("Error - Declarar variavel ou metodo. LINHA = " + tokenAux.getLinha() + "\n");
+            //System.out.println("ALGUM ERRO- " + tokenAux.toString());
+            //System.out.println("Error - Declarar variavel ou metodo.");
+            //jTextAreaSaida.append("Error - Declarar variavel ou metodo. LINHA = " + tokenAux.getLinha() + "\n");
         }
+    }
+
+    public void acao23() {
+        RotRepeat = GerarRotulo();
+        Geracode(RotRepeat + "", "NADA", null);
+    }
+
+    public void acao24() {
+        Geracode(null, "DSVF", RotRepeat + "");
     }
 
     public void pfalsa() {
         //System.out.println("ELSE - " + tokenAux.toString());
         indexToken++;
         tokenAux = tokens.get(indexToken);//atualizando
+
+        System.out.println("TESTE 2 - " + tokenAux.toString());
 
         if (tokenAux.getLexema().equals("else")) {
             indexToken++;
@@ -1191,17 +1245,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
                 indexToken++;
                 tokenAux = tokens.get(indexToken);
+
                 sentencas();
+
+                System.out.println("TESTE 4 = " + tokenAux.toString());
 
                 if (!tokenAux.getLexema().equals("end")) {
                     System.out.println("Error - Declarar palavra reservada end.");
                     jTextAreaSaida.append("Error - Declarar palavra reservada end.  LINHA = " + tokenAux.getLinha() + "\n");
+                } else {
+
                 }
 
             } else {
                 System.out.println("Error - Declarar palavra reservada begin.");
                 jTextAreaSaida.append("Error - Declarar palavra reservada begin.  LINHA = " + tokenAux.getLinha() + "\n");
             }
+        } else {
+
+            System.out.println("TESTE 3 - " + tokenAux.toString());
         }
 
     }
@@ -1216,8 +1278,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         expressao();
         acao16();
     }
-
-    String rel;
 
     public void acao15() {
         rel = tokenAux.getLexema();
@@ -1245,21 +1305,19 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    int rotElse, rotEnd;
-
     public void acao17() {
-        rotElse = GerarRotulo();
-        rotEnd = GerarRotulo();
-        Geracode(null, "DSVF", rotElse + "ROT");
+        RotElse = GerarRotulo();
+        RotEnd = GerarRotulo();
+        Geracode(null, "DSVF", RotElse + "ROT");
     }
 
     public void acao18() {
-        Geracode(null, "DSVS", rotEnd + "");
-        Geracode(rotElse + "", "NADA", null);
+        Geracode(null, "DSVS", RotEnd + "");
+        Geracode(RotElse + "", "NADA", null);
     }
 
     public void acao19() {
-        Geracode(rotEnd + "", "NADA", null);
+        Geracode(RotEnd + "", "NADA", null);
     }
 
     public void relacao() {
@@ -1617,6 +1675,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public void mais_dc() {
 
         validaCompila = tokenAux.getLexema().equals(";"); //verifica se esta escrito program
+
         if (validaCompila) {
             indexToken++;
             tokenAux = tokens.get(indexToken); // atualzia lexama
