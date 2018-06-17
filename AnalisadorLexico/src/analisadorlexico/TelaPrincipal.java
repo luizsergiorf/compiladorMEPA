@@ -350,7 +350,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTextArea.setColumns(20);
         jTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
         jTextArea.setRows(5);
-        jTextArea.setText("Program teste_compiladores\nVar\n\ta, q, soma : integer;\nBegin\t\n\tread(a);\n\twrite(q);\n\n\tsoma:= a + q;\n\tread(a);\n\n\trepeat\n\t\tsoma := soma - 1;\n\tuntil (a<q);\n\n\tif(a<q) then\n\tbegin\n\t\tsoma:= a * q;\n\tend\n\telse\n\tbegin\n\t\tq := q;\n\tend\n\t\n\ta := soma;\nEnd.");
+        jTextArea.setText("Program teste_compiladores\nVar\n\ta, q, soma : integer;\nBegin\t\n\tread(a);\n\twrite(q);\n\n\tsoma:= a + q;\n\tread(a);\n\n\trepeat\n\t\tsoma := soma - 1;\n\tuntil (a<q);\n\n\tif(a<q) then\n\tbegin\n\t\tsoma:= a * q;\n\tend\n\telse\n\tbegin\n\t\tq := q;\n\tend;\n\t\n\ta := soma;\n\n\tFor a := a To q do begin\n\t\tSoma := Soma + q;\n\tEnd;\n\n\n\twhile(a<q) do begin\n\t\ta := soma;\n\tend;\n\n\tread(q);\n\n\nEnd.");
         jScrollPane1.setViewportView(jTextArea);
 
         jTabbedPaneEdicao.addTab("Fonte", jScrollPane1);
@@ -975,14 +975,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    public void acao1() {
-        identificadores.get(indexIdentificador).setClasse("function");
-        Geracode(null, "INPP", null);
-        S = -1;
-        R = 0;
-        indexIdentificador++;
-    }
-
     int end = 0; //endereco MEPA
 
     public void Geracode(String Rot, String Inst, String K) {
@@ -1095,9 +1087,70 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 jTextAreaSaida.append("Error - Abrir parenteses.    LINHA = " + tokenAux.getLinha() + "\n");
             }
         } else if (tokenAux.getLexema().equals("for")) {
+            indexToken++;
+            tokenAux = tokens.get(indexToken);
 
-        } //FOR FUNCIONANDO
-        else if (tokenAux.getLexema().equals("repeat")) {
+            if (tokenAux.getClasse().equals("cId")) {
+                acao25();
+
+                indexToken++;
+                tokenAux = tokens.get(indexToken);
+
+                if (tokenAux.getLexema().equals(":=")) {
+                    indexToken++;
+                    tokenAux = tokens.get(indexToken);
+                    expressao();
+                    acao26();
+
+                    if (tokenAux.getLexema().equals("to")) {
+                        acao27();
+                        indexToken++;
+                        tokenAux = tokens.get(indexToken);
+
+                        expressao();
+                        acao28();
+
+                        if (tokenAux.getLexema().equals("do")) {
+                            indexToken++;
+                            tokenAux = tokens.get(indexToken);
+
+                            if (tokenAux.getLexema().equals("begin")) {
+                                indexToken++;
+                                tokenAux = tokens.get(indexToken);
+                                sentencas();
+
+                                System.out.println("TESTE 5 - " + tokenAux.toString());
+                                if (tokenAux.getLexema().equals("end")) {
+                                    acao29();
+                                    indexToken++;
+                                    tokenAux = tokens.get(indexToken);
+                                }
+
+                            } else {
+                                System.out.println("Error - Declarar palavra reservada begin.");
+                                jTextAreaSaida.append("Error - Declarar palavra reservada begin.    LINHA = " + tokenAux.getLinha() + "\n");
+                            }
+                        } else {
+                            System.out.println("Error - Declarar palavra reservada do.");
+                            jTextAreaSaida.append("Error - Declarar palavra reservada do.    LINHA = " + tokenAux.getLinha() + "\n");
+                        }
+
+                    } else {
+                        System.out.println("Error - Declarar palavra reservada to.");
+                        jTextAreaSaida.append("Error - Declarar palavra reservada to.    LINHA = " + tokenAux.getLinha() + "\n");
+                    }
+
+                } else {
+                    System.out.println("Error - Declarar atribuição :=.");
+                    jTextAreaSaida.append("Error - Declarar atribuição :=.    LINHA = " + tokenAux.getLinha() + "\n");
+                }
+
+            } else {
+                System.out.println("Error - Variavel desconhecida.");
+                jTextAreaSaida.append("Error - Variavel desconhecida.    LINHA = " + tokenAux.getLinha() + "\n");
+            }
+
+        } else if (tokenAux.getLexema().equals("repeat")) {
             acao23();
 
             indexToken++;
@@ -1135,12 +1188,60 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
 
         } else if (tokenAux.getLexema().equals("while")) {
+            acao20();
+            indexToken++;
+            tokenAux = tokens.get(indexToken);
+
+            if (tokenAux.getLexema().equals("(")) {
+                indexToken++;
+                tokenAux = tokens.get(indexToken);
+                condicao();
+
+                System.out.println("TESTE 6 - " + tokenAux.toString());
+
+                if (tokenAux.getLexema().equals(")")) {
+                    acao21();
+                    indexToken++;
+                    tokenAux = tokens.get(indexToken);
+                    if (tokenAux.getLexema().equals("do")) {
+                        indexToken++;
+                        tokenAux = tokens.get(indexToken);
+                        if (tokenAux.getLexema().equals("begin")) {
+                            indexToken++;
+                            tokenAux = tokens.get(indexToken);
+                            sentencas();
+                            System.out.println("TESTE 6 - " + tokenAux.toString());
+
+                            if (tokenAux.getLexema().equals("end")) {
+                                acao22();
+                                indexToken++;
+                                tokenAux = tokens.get(indexToken);
+                            } else {
+                                System.out.println("Error - Declarar palavra reservada end.");
+                                jTextAreaSaida.append("Error - Declarar palavra reservada end.    LINHA = " + tokenAux.getLinha() + "\n");
+                            }
+                        }
+
+                    } else {
+                        System.out.println("Error - Declarar palavra reservada do.");
+                        jTextAreaSaida.append("Error - Declarar palavra reservada do.    LINHA = " + tokenAux.getLinha() + "\n");
+                    }
+
+                } else {
+                    System.out.println("Error - Fechar parenteses ).");
+                    jTextAreaSaida.append("Error - Fechar parenteses ).    LINHA = " + tokenAux.getLinha() + "\n");
+                }
+
+            } else {
+                System.out.println("Error - Abrir parenteses (.");
+                jTextAreaSaida.append("Error - Abrir parenteses (.    LINHA = " + tokenAux.getLinha() + "\n");
+            }
 
         } else if (tokenAux.getLexema().equals("if")) {
 
             //ESTA FUNCIONANDO PERFEITAMENTE
             indexToken++;
-            tokenAux = tokens.get(indexToken); // começar com a
+            tokenAux = tokens.get(indexToken);
             //verificando se abriu parenteses
             if (tokenAux.getLexema().equals("(")) {
 
@@ -1169,8 +1270,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                 pfalsa();
                                 acao19();
 
-                                indexToken++;
-                                tokenAux = tokens.get(indexToken);
+                                System.out.println("TESTE 4 - " + tokenAux.toString());
+
+                                if (!tokenAux.getLexema().equals(";")) {
+                                    indexToken++;
+                                    tokenAux = tokens.get(indexToken);
+                                }
 
                             } else {
                                 System.out.println("Error - Declarar palavra reservada end.");
@@ -1222,15 +1327,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    public void acao23() {
-        RotRepeat = GerarRotulo();
-        Geracode(RotRepeat + "", "NADA", null);
-    }
-
-    public void acao24() {
-        Geracode(null, "DSVF", RotRepeat + "");
-    }
-
     public void pfalsa() {
         //System.out.println("ELSE - " + tokenAux.toString());
         indexToken++;
@@ -1279,47 +1375,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         acao16();
     }
 
-    public void acao15() {
-        rel = tokenAux.getLexema();
-    }
-
-    public void acao16() {
-
-        if (rel.equals("=")) {
-            Geracode(null, "CMIG", null);
-        }
-        if (rel.equals("<")) {
-            Geracode(null, "CMME", null);
-        }
-        if (rel.equals(">")) {
-            Geracode(null, "CMMA", null);
-        }
-        if (rel.equals("<=")) {
-            Geracode(null, "CMEG", null);
-        }
-        if (rel.equals(">=")) {
-            Geracode(null, "CMAG", null);
-        }
-        if (rel.equals("<>")) {
-            Geracode(null, "CMDG", null);
-        }
-    }
-
-    public void acao17() {
-        RotElse = GerarRotulo();
-        RotEnd = GerarRotulo();
-        Geracode(null, "DSVF", RotElse + "ROT");
-    }
-
-    public void acao18() {
-        Geracode(null, "DSVS", RotEnd + "");
-        Geracode(RotElse + "", "NADA", null);
-    }
-
-    public void acao19() {
-        Geracode(RotEnd + "", "NADA", null);
-    }
-
     public void relacao() {
         if (!tokenAux.getLexema().equals("=")) {
             if (!tokenAux.getLexema().equals(">")) {
@@ -1335,73 +1390,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 }
             }
         }
-    }
-
-    public void acao13() {
-        indexIdentificador = 0;
-        for (Identificador i : identificadores) {
-            if (!i.getLexema().equals(tokenAux.getLexema())) {
-                indexIdentificador++;
-            } else {
-                break;
-            }
-        }
-        if (indexIdentificador == identificadores.size()) {
-            System.out.println("Error - Variavel não declarada.");
-            jTextAreaSaida.append("Error - Variavel não declarada.  LINHA = " + tokenAux.getLinha() + "\n");
-        } else {
-            Addr = indexIdentificador;
-        }
-
-    }
-
-    public void acao14() {
-        Geracode(null, "ARMZ", identificadores.get(Addr).getEndereco() + "");
-    }
-
-    public void acao20() {
-        RotWhile = GerarRotulo();
-        RotEnd = GerarRotulo();
-        Geracode(RotWhile + "", "NADA", null);
-    }
-
-    public void acao21() {
-        Geracode(null, "DSVF", RotEnd + "ROT");
-    }
-
-    public void acao22() {
-        Geracode(null, "DSVS", RotWhile + "");
-        Geracode(RotEnd + "", "NADA", null);
-    }
-
-    public void acao26() {
-        //talvez precisa de ajuste no endereço 
-        Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
-    }
-
-    public void acao27() {
-        RotFor = GerarRotulo();
-        RotEnd = GerarRotulo();
-        Geracode(RotFor + "", "NADA", null);
-        Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
-    }
-
-    public void acao28() {
-        Geracode(null, "CMEG", null);
-        Geracode(null, "DSVF", RotEnd + "ROT");
-    }
-
-    public void acao29() {
-        Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
-        Geracode(null, "CRCT", "1");
-        Geracode(null, "SOMA", null);
-        Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
-        Geracode(null, "DSVF", RotFor + "ROT");
-        Geracode(RotEnd + "", "NADA", null);
-    }
-
-    public void acao30() {
-        Geracode(null, "PARA", null);
     }
 
     public int GerarRotulo() {
@@ -1435,19 +1423,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
             //indexToken++;
             //tokenAux = tokens.get(indexToken);
             outros_termos();
-        }
-    }
-
-    public void acao9() {
-        opAd = tokenAux.getLexema();
-    }
-
-    public void acao10() {
-        if (opAd.equals("+")) {
-            Geracode(null, "SOMA", null);
-        }
-        if (opAd.equals("-")) {
-            Geracode(null, "SUBT", null);
         }
     }
 
@@ -1511,19 +1486,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    public void acao11() {
-        opMul = tokenAux.getLexema();
-    }
-
-    public void acao12() {
-        if (opMul.equals("*")) {
-            Geracode(null, "MULT", null);
-        }
-        if (opMul.equals("/")) {
-            Geracode(null, "DIVI", null);
-        }
-    }
-
     public void op_mul() {
 
         if (!tokenAux.getLexema().equals("*")) {
@@ -1531,47 +1493,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 System.out.println("Error - Falta do Operador de * ou /.");
                 jTextAreaSaida.append("Error - Falta do Operador de * ou /. LINHA = " + tokenAux.getLinha() + "\n");
             }
-        }
-    }
-
-    public void acao8() {
-        Geracode(null, "CRCT", tokenAux.getLexema());
-    }
-
-    public void acao7() {
-        indexIdentificador = 0;
-        for (Identificador i : identificadores) {
-            if (!i.getLexema().equals(tokenAux.getLexema())) {
-                indexIdentificador++;
-            } else {
-                break;
-            }
-        }
-
-        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
-            Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
-        } else {
-            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
-            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
-        }
-
-    }
-
-    public void acao25() {
-        indexIdentificador = 0;
-        for (Identificador i : identificadores) {
-            if (!i.getLexema().equals(tokenAux.getLexema())) {
-                indexIdentificador++;
-            } else {
-                break;
-            }
-        }
-
-        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
-            Addr = indexIdentificador;
-        } else {
-            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
-            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
         }
     }
 
@@ -1593,26 +1514,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    public void acao6() {
-        //encontrar o endereço correto do identificador
-        indexIdentificador = 0;
-        for (Identificador i : identificadores) {
-            if (!i.getLexema().equals(tokenAux.getLexema())) {
-                indexIdentificador++;
-            } else {
-                break;
-            }
-        }
-
-        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
-            Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
-            Geracode(null, "IMPR", null);
-        } else {
-            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
-            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
-        }
-    }
-
     public void var_read() {
         if (tokenAux.getClasse().equals("cId")) {
             acao5();
@@ -1629,28 +1530,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tokenAux = tokens.get(indexToken);
             var_read();
         }
-    }
-
-    public void acao5() {
-
-        //encontrar o endereço correto do identificador
-        indexIdentificador = 0;
-        for (Identificador i : identificadores) {
-            if (!i.getLexema().equals(tokenAux.getLexema())) {
-                indexIdentificador++;
-            } else {
-                break;
-            }
-        }
-
-        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
-            Geracode(null, "LEIT", null);
-            Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
-        } else {
-            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
-            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
-        }
-
     }
 
     public void declara() {
@@ -1743,6 +1622,17 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
+    //-------------------------
+    //AÇÕES PARA GERAR O MEPA
+    //-------------------------
+    public void acao1() {
+        identificadores.get(indexIdentificador).setClasse("function");
+        Geracode(null, "INPP", null);
+        S = -1;
+        R = 0;
+        indexIdentificador++;
+    }
+
     public void acao2() {
 
         if (!identificadores.get(indexIdentificador).getClasse().equals("var")) {
@@ -1756,6 +1646,233 @@ public class TelaPrincipal extends javax.swing.JFrame {
             jTextAreaSaida.append("Error - tentativa de redeclaração do id. Linha = " + tokenAux.getLinha() + "\n");
         }
     }
+
+    //ACAO 3 e ACAO 3 NAO UTILIZADAS
+    public void acao5() {
+
+        //encontrar o endereço correto do identificador
+        indexIdentificador = 0;
+        for (Identificador i : identificadores) {
+            if (!i.getLexema().equals(tokenAux.getLexema())) {
+                indexIdentificador++;
+            } else {
+                break;
+            }
+        }
+
+        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
+            Geracode(null, "LEIT", null);
+            Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
+        } else {
+            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
+            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
+        }
+
+    }
+
+    public void acao6() {
+        //encontrar o endereço correto do identificador
+        indexIdentificador = 0;
+        for (Identificador i : identificadores) {
+            if (!i.getLexema().equals(tokenAux.getLexema())) {
+                indexIdentificador++;
+            } else {
+                break;
+            }
+        }
+
+        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
+            Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
+            Geracode(null, "IMPR", null);
+        } else {
+            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
+            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
+        }
+    }
+
+    public void acao7() {
+        indexIdentificador = 0;
+        for (Identificador i : identificadores) {
+            if (!i.getLexema().equals(tokenAux.getLexema())) {
+                indexIdentificador++;
+            } else {
+                break;
+            }
+        }
+
+        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
+            Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
+        } else {
+            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
+            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
+        }
+    }
+
+    public void acao8() {
+        Geracode(null, "CRCT", tokenAux.getLexema());
+    }
+
+    public void acao9() {
+        opAd = tokenAux.getLexema();
+    }
+
+    public void acao10() {
+        if (opAd.equals("+")) {
+            Geracode(null, "SOMA", null);
+        }
+        if (opAd.equals("-")) {
+            Geracode(null, "SUBT", null);
+        }
+    }
+
+    public void acao11() {
+        opMul = tokenAux.getLexema();
+    }
+
+    public void acao12() {
+        if (opMul.equals("*")) {
+            Geracode(null, "MULT", null);
+        }
+        if (opMul.equals("/")) {
+            Geracode(null, "DIVI", null);
+        }
+    }
+
+    public void acao13() {
+        indexIdentificador = 0;
+        for (Identificador i : identificadores) {
+            if (!i.getLexema().equals(tokenAux.getLexema())) {
+                indexIdentificador++;
+            } else {
+                break;
+            }
+        }
+        if (indexIdentificador == identificadores.size()) {
+            System.out.println("Error - Variavel não declarada.");
+            jTextAreaSaida.append("Error - Variavel não declarada.  LINHA = " + tokenAux.getLinha() + "\n");
+        } else {
+            Addr = indexIdentificador;
+        }
+
+    }
+
+    public void acao14() {
+        Geracode(null, "ARMZ", identificadores.get(Addr).getEndereco() + "");
+    }
+
+    public void acao15() {
+        rel = tokenAux.getLexema();
+    }
+
+    public void acao16() {
+
+        if (rel.equals("=")) {
+            Geracode(null, "CMIG", null);
+        }
+        if (rel.equals("<")) {
+            Geracode(null, "CMME", null);
+        }
+        if (rel.equals(">")) {
+            Geracode(null, "CMMA", null);
+        }
+        if (rel.equals("<=")) {
+            Geracode(null, "CMEG", null);
+        }
+        if (rel.equals(">=")) {
+            Geracode(null, "CMAG", null);
+        }
+        if (rel.equals("<>")) {
+            Geracode(null, "CMDG", null);
+        }
+    }
+
+    public void acao17() {
+        RotElse = GerarRotulo();
+        RotEnd = GerarRotulo();
+        Geracode(null, "DSVF", RotElse + "ROT");
+    }
+
+    public void acao18() {
+        Geracode(null, "DSVS", RotEnd + "");
+        Geracode(RotElse + "", "NADA", null);
+    }
+
+    public void acao19() {
+        Geracode(RotEnd + "", "NADA", null);
+    }
+
+    public void acao20() {
+        RotWhile = GerarRotulo();
+        RotEnd = GerarRotulo();
+        Geracode(RotWhile + "", "NADA", null);
+    }
+
+    public void acao21() {
+        Geracode(null, "DSVF", RotEnd + "ROT");
+    }
+
+    public void acao22() {
+        Geracode(null, "DSVS", RotWhile + "");
+        Geracode(RotEnd + "", "NADA", null);
+    }
+
+    public void acao23() {
+        RotRepeat = GerarRotulo();
+        Geracode(RotRepeat + "", "NADA", null);
+    }
+
+    public void acao24() {
+        Geracode(null, "DSVF", RotRepeat + "");
+    }
+
+    public void acao25() {
+        indexIdentificador = 0;
+        for (Identificador i : identificadores) {
+            if (!i.getLexema().equals(tokenAux.getLexema())) {
+                indexIdentificador++;
+            } else {
+                break;
+            }
+        }
+
+        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
+            Addr = indexIdentificador;
+        } else {
+            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
+            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
+        }
+    }
+
+    public void acao26() {
+        //talvez precisa de ajuste no endereço 
+        Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
+    }
+
+    public void acao27() {
+        RotFor = GerarRotulo();
+        RotEnd = GerarRotulo();
+        Geracode(RotFor + "", "NADA", null);
+        Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
+    }
+
+    public void acao28() {
+        Geracode(null, "CMEG", null);
+        Geracode(null, "DSVF", RotEnd + "ROT");
+    }
+
+    public void acao29() {
+        Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
+        Geracode(null, "CRCT", "1");
+        Geracode(null, "SOMA", null);
+        Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
+        Geracode(null, "DSVF", RotFor + "ROT");
+        Geracode(RotEnd + "", "NADA", null);
+    }
+
+    public void acao30() {
+        Geracode(null, "PARA", null);
+    }
+
 
     private void jMenuItemCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCompilarActionPerformed
         //A PARTE DIFICIL
