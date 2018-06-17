@@ -251,19 +251,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         if (validaReal) {
             Matcher m = p.matcher(s);
             boolean b = m.find();
-            if (b == true) {
-                return true;
-            } else {
-                return false;
-            }
+            return b == true;
         } else {
             Matcher m = p2.matcher(s);
             boolean b = m.find();
-            if (b == true) {
-                return true;
-            } else {
-                return false;
-            }
+            return b == true;
         }
 
     }
@@ -321,6 +313,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("COMPILADOR");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -660,8 +657,43 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemSalvarActionPerformed
 
     private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSairActionPerformed
-        // TODO add your handling code here:
-        System.exit(0);
+
+        switch (JOptionPane.showConfirmDialog(null, "Deseja salvar arquivo?")) {
+            case 0:
+                System.out.println("botao yes clicado");
+
+                String novoConteudo = jTextArea.getText();
+                if (arquivo == null) {
+
+                    int opc = 0;
+                    JFileChooser j = new JFileChooser(UtilidadesArquivos.getDiretorioDoPrograma());
+
+                    j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    opc = j.showSaveDialog(this);
+
+                    System.out.println(opc);
+
+                    if (opc == 0) {
+                        arquivo = j.getSelectedFile();
+                        UtilidadesArquivos.salvarEmArquivoTexto(jTextArea.getText(), arquivo);
+                    }
+
+                } else {
+                    UtilidadesArquivos.salvarEmArquivoTexto(novoConteudo, arquivo);
+                }
+
+                System.exit(0);
+                break;
+            case 1:
+                System.out.println("botao no clicado");
+                System.exit(0);
+                break;
+            case 2:
+                System.out.println("botao cancel clicado");
+                this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
+                break;
+        }
+
     }//GEN-LAST:event_jMenuItemSairActionPerformed
 
     private void jMenuItemProjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemProjetoActionPerformed
@@ -961,6 +993,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     jTextAreaSaida.setBackground(new java.awt.Color(188, 255, 233)); //setando cor se o codigo deu certo
                     System.out.println("FIM DO CODIGO!");
                     jTextAreaSaida.append("FIM DO CODIGO!\n");
+                    JOptionPane.showMessageDialog(null, "CODIGO ESTÁ CORRETO!", "COMPILADO", 1);
                 }
                 //System.out.println("FIM - " + tokenAux.toString());
             } else {
@@ -1925,6 +1958,47 @@ public class TelaPrincipal extends javax.swing.JFrame {
         ImageIcon II = new ImageIcon(getClass().getResource("/imagens/ajudabtn.png"));
         jLabelInfo.setIcon(II);
     }//GEN-LAST:event_jLabelInfoMouseExited
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+
+        switch (JOptionPane.showConfirmDialog(null, "Deseja salvar arquivo?")) {
+            case 0:
+                System.out.println("botao yes clicado");
+
+                String novoConteudo = jTextArea.getText();
+                if (arquivo == null) {
+
+                    int opc = 0;
+                    JFileChooser j = new JFileChooser(UtilidadesArquivos.getDiretorioDoPrograma());
+
+                    j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    opc = j.showSaveDialog(this);
+
+                    System.out.println(opc);
+
+                    if (opc == 0) {
+                        arquivo = j.getSelectedFile();
+                        UtilidadesArquivos.salvarEmArquivoTexto(jTextArea.getText(), arquivo);
+                    }
+
+                } else {
+                    UtilidadesArquivos.salvarEmArquivoTexto(novoConteudo, arquivo);
+                }
+
+                System.exit(0);
+                break;
+            case 1:
+                System.out.println("botao no clicado");
+                System.exit(0);
+                break;
+            case 2:
+                System.out.println("botao cancel clicado");
+                this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
+                break;
+        }
+
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
