@@ -990,6 +990,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 //    tokenAux = tokens.get(indexToken); // atualzia lexama
                 //}
                 if (tokenAux.getLexema().equals(".")) {
+                    acao30();
+                    
                     jTextAreaSaida.setBackground(new java.awt.Color(188, 255, 233)); //setando cor se o codigo deu certo
                     System.out.println("FIM DO CODIGO!");
                     jTextAreaSaida.append("FIM DO CODIGO!\n");
