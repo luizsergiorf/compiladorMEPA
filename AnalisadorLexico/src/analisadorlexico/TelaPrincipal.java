@@ -908,12 +908,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tk.setLinha(i);
             tk.setColuna(j + 1);
             tokens.add(tk);
-
-            //System.out.println("CHEGOU AQUI");
-            //System.out.println("###TODOS TOKENS###\n" + tokens.toString());
-            //jTextAreaSaida.append("LEXEMAS ENCONTRADOS!");
+            
+            //-------------------
             //IDENTIFICADORES
-            int endereco = 0;
+            //-------------------
+            int endereco = -1;
             boolean verifica = false;
             List<Identificador> identAux;
 
