@@ -347,7 +347,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTextArea.setColumns(20);
         jTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
         jTextArea.setRows(5);
-        jTextArea.setText("Program teste_compiladores\nVar\n\ta, q, soma : integer;\nBegin\t\n\tread(a);\n\twrite(q);\n\n\tsoma:= a + q;\n\tread(a);\n\n\trepeat\n\t\tsoma := soma - 1;\n\tuntil (a<q);\n\n\tif(a<q) then\n\tbegin\n\t\tsoma:= a * q;\n\tend\n\telse\n\tbegin\n\t\tq := q;\n\tend;\n\t\n\ta := soma;\n\n\tFor a := a To q do begin\n\t\tSoma := Soma + q;\n\tEnd;\n\n\n\twhile(a<q) do begin\n\t\ta := soma;\n\tend;\n\n\tread(q);\n\n\nEnd.");
+        jTextArea.setText("Program Somatorio\nVar\n\tSoma, Conta, Ini, Fim : integer;\nBegin\n\tIni := 0;\n\tFim := 0;\n\tConta := 0;\n\tSoma := 0;\n\tread( Ini, Fim );\n\tFor Conta := Ini To Fim do begin\n\t\tSoma := Soma + Conta\n\tEnd;\n\twrite( Soma );\nEnd.");
         jScrollPane1.setViewportView(jTextArea);
 
         jTabbedPaneEdicao.addTab("Fonte", jScrollPane1);
@@ -735,6 +735,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTextAreaSaida.setText("");
         String codigo = jTextArea.getText();
         numerosLinhas = 0;
+        codigoMepa.clear();
         tk = null;
 
         if (!codigo.isEmpty()) {
@@ -908,7 +909,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tk.setLinha(i);
             tk.setColuna(j + 1);
             tokens.add(tk);
-            
+
             //-------------------
             //IDENTIFICADORES
             //-------------------
@@ -963,6 +964,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
         RotEnd = 0;
         RotWhile = 0;
 
+        tokenAux = null;
+
+        RotRepeat = 0;
+        rel = "";
+        RotElse = 0;
+
         program();
     }
 
@@ -990,7 +997,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 //}
                 if (tokenAux.getLexema().equals(".")) {
                     acao30();
-                    
+
                     jTextAreaSaida.setBackground(new java.awt.Color(188, 255, 233)); //setando cor se o codigo deu certo
                     System.out.println("FIM DO CODIGO!");
                     jTextAreaSaida.append("FIM DO CODIGO!\n");
@@ -1674,6 +1681,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             S = S + 1;
             Geracode(null, "AMEM", "1");
             //ja adicionei o endereço
+            identificadores.get(indexIdentificador).setEndereco(S);
             indexIdentificador++;
         } else {
             System.out.println("Error - tentativa de redeclaração do id.");
@@ -1781,11 +1789,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 break;
             }
         }
-        if (indexIdentificador == identificadores.size()) {
-            System.out.println("Error - Variavel não declarada.");
-            jTextAreaSaida.append("Error - Variavel não declarada.  LINHA = " + tokenAux.getLinha() + "\n");
-        } else {
+
+        if (identificadores.get(indexIdentificador).getClasse().equals("var")) {
             Addr = indexIdentificador;
+        } else {
+            System.out.println("Error - Variavel não declarada." + tokenAux.getLexema());
+            jTextAreaSaida.append("Error - Variavel não declarada.  Linha = " + tokenAux.getLinha() + "\n");
         }
 
     }
@@ -1823,40 +1832,41 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public void acao17() {
         RotElse = GerarRotulo();
         RotEnd = GerarRotulo();
-        Geracode(null, "DSVF", RotElse + "ROT");
+        //RotEnd = RotElse;
+        Geracode(null, "DSVF", "ROT" + RotElse);
     }
 
     public void acao18() {
-        Geracode(null, "DSVS", RotEnd + "");
-        Geracode(RotElse + "", "NADA", null);
+        Geracode(null, "DSVS", "ROT" + RotEnd);
+        Geracode("ROT" + RotElse, "NADA", null);
     }
 
     public void acao19() {
-        Geracode(RotEnd + "", "NADA", null);
+        Geracode("ROT" + RotEnd, "NADA", null);
     }
 
     public void acao20() {
         RotWhile = GerarRotulo();
         RotEnd = GerarRotulo();
-        Geracode(RotWhile + "", "NADA", null);
+        Geracode("ROT" + RotWhile, "NADA", null);
     }
 
     public void acao21() {
-        Geracode(null, "DSVF", RotEnd + "ROT");
+        Geracode(null, "DSVF", "ROT" + RotEnd);
     }
 
     public void acao22() {
-        Geracode(null, "DSVS", RotWhile + "");
-        Geracode(RotEnd + "", "NADA", null);
+        Geracode(null, "DSVS", "ROT" + RotWhile);
+        Geracode("ROT" + RotEnd, "NADA", null);
     }
 
     public void acao23() {
         RotRepeat = GerarRotulo();
-        Geracode(RotRepeat + "", "NADA", null);
+        Geracode("ROT" + RotRepeat, "NADA", null);
     }
 
     public void acao24() {
-        Geracode(null, "DSVF", RotRepeat + "");
+        Geracode(null, "DSVF", "ROT" + RotRepeat);
     }
 
     public void acao25() {
@@ -1879,28 +1889,31 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     public void acao26() {
         //talvez precisa de ajuste no endereço 
-        Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
+
+        Geracode(null, "ARMZ", identificadores.get(Addr).getEndereco() + "");
     }
 
     public void acao27() {
         RotFor = GerarRotulo();
         RotEnd = GerarRotulo();
-        Geracode(RotFor + "", "NADA", null);
-        Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
+        Geracode("ROT" + RotFor, "NADA", null);
+
+        System.out.println("HELP ME - " + Addr);
+        Geracode(null, "CRVL", identificadores.get(Addr).getEndereco() + "");
     }
 
     public void acao28() {
         Geracode(null, "CMEG", null);
-        Geracode(null, "DSVF", RotEnd + "ROT");
+        Geracode(null, "DSVF", "ROT" + RotEnd);
     }
 
     public void acao29() {
-        Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + "");
+        Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + ""); //antes era Addr
         Geracode(null, "CRCT", "1");
         Geracode(null, "SOMA", null);
         Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
-        Geracode(null, "DSVF", RotFor + "ROT");
-        Geracode(RotEnd + "", "NADA", null);
+        Geracode(null, "DSVS", "ROT" + RotFor);
+        Geracode("ROT" + RotEnd, "NADA", null);
     }
 
     public void acao30() {
