@@ -1806,7 +1806,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public void acao8() {
-        System.out.println("TESTE NUMERO - " + tokenAux.toString());
+        //System.out.println("TESTE NUMERO - " + tokenAux.toString());
         Geracode(null, "CRCT", tokenAux.getLexema());
     }
 
@@ -2225,7 +2225,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabelCompilar.setIcon(II);
         //A PARTE DIFICIL
         analiseLexica();
-        System.out.println("ANALISE LEXICA FEITA!");
+        System.out.println("ANALISE LEXICA FEITA! - " + tokens.size() + " LEXICOS");
         jTextAreaSaida.setBackground(new java.awt.Color(255, 209, 176)); //setando cor vermelha de erro
         analiseSintatica();
     }//GEN-LAST:event_jLabelCompilarMousePressed
