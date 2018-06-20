@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import other.FiltroDeArquivos;
 import other.UtilidadesArquivos;
 
@@ -36,7 +37,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
      * Creates new form TelaPrincipal
      */
     private JanelaAjuda dialog = null;
-    
+
     File arquivo = null;
     String conteudo = "";
     String linguagem = "";
@@ -331,6 +332,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
         });
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
@@ -340,7 +344,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jTextAreaSaida.setEditable(false);
         jTextAreaSaida.setColumns(20);
-        jTextAreaSaida.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
+        jTextAreaSaida.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jTextAreaSaida.setRows(5);
         jScrollPane2.setViewportView(jTextAreaSaida);
 
@@ -352,14 +356,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
         );
 
-        jTextArea.setBackground(new java.awt.Color(255, 253, 222));
         jTextArea.setColumns(20);
-        jTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
+        jTextArea.setFont(new java.awt.Font("Courier New", 0, 16)); // NOI18N
         jTextArea.setRows(5);
         jTextArea.setText("Program Somatorio\nVar\n\tSoma, Conta, Ini, Fim : integer;\nBegin\n\tIni := 0;\n\tFim := 0;\n\tConta := 0;\n\tSoma := 0;\n\tread( Ini, Fim );\n\tFor Conta := Ini To Fim do begin\n\t\tSoma := Soma + Conta;\n\tEnd;\n\twrite( Soma );\nEnd.");
         jScrollPane1.setViewportView(jTextArea);
@@ -367,6 +368,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTabbedPaneEdicao.addTab("Fonte", jScrollPane1);
 
         jTable1.setModel(GlazedListsSwing.eventTableModel(tokens, new TokenTableFormat()));
+        jTable1.setCellSelectionEnabled(true);
         jTable1.setRequestFocusEnabled(false);
         jTable1.setRowHeight(20);
         jScrollPane3.setViewportView(jTable1);
@@ -391,6 +393,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTabbedPaneEdicao.addTab("Itens Lexicos", jPanel3);
 
         jTable2.setModel(GlazedListsSwing.eventTableModel(identificadores, new IdTableFormat()));
+        jTable2.setCellSelectionEnabled(true);
         jScrollPane4.setViewportView(jTable2);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -413,6 +416,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTabbedPaneEdicao.addTab("Tabela de Símbolos", jPanel5);
 
         jTable3.setModel(GlazedListsSwing.eventTableModel(codigoMepa, new MepaTableFormat()));
+        jTable3.setCellSelectionEnabled(true);
         jScrollPane5.setViewportView(jTable3);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -442,22 +446,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPaneEdicao)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jTabbedPaneEdicao, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPaneEdicao.getAccessibleContext().setAccessibleName("Edição");
 
-        jPanel4.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
 
         jLabelExecutar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/btnPlay.png"))); // NOI18N
         jLabelExecutar.setToolTipText("Executar");
@@ -473,7 +477,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jLabelCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/compilar.png"))); // NOI18N
+        jLabelCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/compilarbtn.png"))); // NOI18N
         jLabelCompilar.setToolTipText("Compilar");
         jLabelCompilar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
@@ -647,7 +651,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -1044,11 +1048,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 if (tokenAux.getLexema().equals(".")) {
                     acao30();
 
-                    jTextAreaSaida.setBackground(new java.awt.Color(188, 255, 233)); //setando cor se o codigo deu certo
-                    System.out.println("ANALISE SINTATICA FEITA!");
-                    System.out.println("FIM DO CODIGO!");
-                    jTextAreaSaida.append("FIM DO CODIGO!\n");
-                    JOptionPane.showMessageDialog(null, "CODIGO ESTÁ CORRETO!", "COMPILADO", 1);
+                    int nlinhas;
+                    String linhas[] = jTextAreaSaida.getText().split("\n"); //divindo a string por linhas
+                    nlinhas = linhas.length; //numero de linhas
+
+                    if (nlinhas > 1) {
+                        jTextAreaSaida.setBackground(new java.awt.Color(255, 209, 176)); //setando cor vermelha
+                        System.out.println("ANALISE SINTATICA FEITA!");
+                        System.out.println("FIM DO CODIGO MAS COM ERRO!");
+                        jTextAreaSaida.append("FIM DO CODIGO, MAS TEVE ERRO.\n");
+                        JOptionPane.showMessageDialog(null, "ENCONTROU ALGUM ERRO!", "COMPILADO", 1);
+
+                    } else {
+                        jTextAreaSaida.setBackground(new java.awt.Color(188, 255, 233)); //setando cor se o codigo deu certo
+                        System.out.println("ANALISE SINTATICA FEITA!");
+                        System.out.println("FIM DO CODIGO!");
+                        jTextAreaSaida.append("FIM DO CODIGO!\n");
+                        JOptionPane.showMessageDialog(null, "CODIGO ESTÁ CORRETO!", "COMPILADO", 1);
+                    }
+
                 }
                 //System.out.println("FIM - " + tokenAux.toString());
             } else {
@@ -1788,6 +1806,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public void acao8() {
+        System.out.println("TESTE NUMERO - " + tokenAux.toString());
         Geracode(null, "CRCT", tokenAux.getLexema());
     }
 
@@ -1930,11 +1949,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Geracode(null, "ARMZ", identificadores.get(Addr).getEndereco() + "");
     }
 
+    int Addr2=-1;
     public void acao27() {
         RotFor = GerarRotulo();
         RotEnd = GerarRotulo();
         Geracode("ROT" + RotFor, "NADA", null);
         Geracode(null, "CRVL", identificadores.get(Addr).getEndereco() + "");
+        
+        System.out.println("IndexIndentificador - " + indexIdentificador + " Addr = " + Addr);
+        Addr2 = Addr;
     }
 
     public void acao28() {
@@ -1943,10 +1966,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public void acao29() {
-        Geracode(null, "CRVL", identificadores.get(indexIdentificador).getEndereco() + ""); //antes era Addr
+        
+        Geracode(null, "CRVL", identificadores.get(Addr2).getEndereco() + ""); //antes era Addr
         Geracode(null, "CRCT", "1");
         Geracode(null, "SOMA", null);
-        Geracode(null, "ARMZ", identificadores.get(indexIdentificador).getEndereco() + "");
+        Geracode(null, "ARMZ", identificadores.get(Addr2).getEndereco() + "");
         Geracode(null, "DSVS", "ROT" + RotFor);
         Geracode("ROT" + RotEnd, "NADA", null);
     }
@@ -1963,180 +1987,202 @@ public class TelaPrincipal extends javax.swing.JFrame {
         memoria.clear();
 
         if (!codigoMepa.isEmpty()) {
-            //for do mepa
+            OUTER:
             for (topoMepa = 0; topoMepa < codigoMepa.size(); topoMepa++) {
-                Memoria memoriaaux = new Memoria();
+                memoriaaux = new Memoria();
+                switch (codigoMepa.get(topoMepa).getInstrucao()) {
+                    case "INPP":
+                        topoMemoria = -1;
+                        break;
+                    case "PARA":
+                        System.out.println("EXECUÇÃO DO MEPA FEITA!");
+                        jTextAreaSaida.append("EXECUÇÃO DO CODIGO TERMINADA!\n");
+                        break OUTER;
+                    case "AMEM":
+                        topoMemoria = topoMemoria + Integer.parseInt(codigoMepa.get(topoMepa).getK());
+                        memoriaaux.setEndereco("" + topoMemoria);
+                        memoriaaux.setValor(0);
+                        memoria.add(memoriaaux);
+                        break;
+                    case "LEIT":
+                        topoMemoria = topoMemoria + 1;
+                        String auxx = "";
+                        for (Identificador id : identificadores) {
+                            if (id.getEndereco() == (Integer.parseInt(codigoMepa.get(topoMepa + 1).getK()))) {
 
-                if (codigoMepa.get(topoMepa).getInstrucao().equals("INPP")) {
-                    topoMemoria = -1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("PARA")) {
-                    System.out.println("EXECUÇÃO DO MEPA FEITA!");
-                    jTextAreaSaida.append("EXECUÇÃO DO CODIGO TERMINADA!\n");
-                    break;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("AMEM")) {
-                    topoMemoria = topoMemoria + Integer.parseInt(codigoMepa.get(topoMepa).getK());
-                    memoriaaux.setEndereco("" + topoMemoria);
-                    memoriaaux.setValor(0);
-                    memoria.add(memoriaaux);
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("LEIT")) {
-                    topoMemoria = topoMemoria + 1;
-                    String auxx = "";
-                    for (Identificador id : identificadores) {
-                        if (id.getEndereco() == (Integer.parseInt(codigoMepa.get(topoMepa + 1).getK()))) {
-
-                            //PARA QUE ACEITA APENAS NUMEROS
-                            int valor = 0;
-                            boolean valida = false;
-                            String acumulador = "";
-                            while (valida == false) {
-                                try {
-                                    acumulador = JOptionPane.showInputDialog("Digite qual o valor para " + id.getLexema() + ":");
-                                    valor = Integer.parseInt(acumulador);
-                                    //System.out.println("DIGITADO - " + valor);
-                                    valida = true;
-                                } catch (NumberFormatException e) {
-                                    JOptionPane.showMessageDialog(null, "Informe apenas números inteiros!", "ENTRADA", 0);
-                                    valida = false;
+                                //PARA QUE ACEITA APENAS NUMEROS
+                                int valor = 0;
+                                boolean valida = false;
+                                String acumulador = "";
+                                while (valida == false) {
+                                    try {
+                                        acumulador = JOptionPane.showInputDialog("Digite qual o valor para " + id.getLexema() + ":");
+                                        valor = Integer.parseInt(acumulador);
+                                        //System.out.println("DIGITADO - " + valor);
+                                        valida = true;
+                                    } catch (NumberFormatException e) {
+                                        JOptionPane.showMessageDialog(null, "Informe apenas números inteiros!", "ENTRADA", 0);
+                                        valida = false;
+                                    }
                                 }
-                            }
 
-                            auxx = acumulador;
-                            //auxx = JOptionPane.showInputDialog("Digite qual o valor para " + id.getLexema() + ":");
-                            memoriaaux.setEndereco("" + topoMemoria);
-                            memoriaaux.setValor(Integer.parseInt(auxx));
-                            memoria.add(memoriaaux);
-                            break;
-                        }
-                    }
-
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("IMPR")) {
-                    JOptionPane.showMessageDialog(null, "Resultado:" + memoria.get(topoMemoria).getValor());
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CRCT")) {
-                    topoMemoria = topoMemoria + 1;
-                    memoriaaux.setEndereco("" + topoMemoria);
-                    memoriaaux.setValor(Integer.parseInt(codigoMepa.get(topoMepa).getK()));
-                    memoria.add(memoriaaux);
-
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CRVL")) {
-                    topoMemoria = topoMemoria + 1;
-                    memoriaaux.setEndereco("" + topoMemoria);
-                    memoriaaux.setValor(memoria.get(Integer.parseInt(codigoMepa.get(topoMepa).getK())).getValor());
-                    memoria.add(memoriaaux);
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("SOMA")) {
-                    memoria.get(topoMemoria - 1).setValor(memoria.get(topoMemoria - 1).getValor() + memoria.get(topoMemoria).getValor());
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("SUBT")) {
-                    memoria.get(topoMemoria - 1).setValor(memoria.get(topoMemoria - 1).getValor() - memoria.get(topoMemoria).getValor());
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("MULT")) {
-                    memoria.get(topoMemoria - 1).setValor(memoria.get(topoMemoria - 1).getValor() * memoria.get(topoMemoria).getValor());
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("DIVI")) {
-                    memoria.get(topoMemoria - 1).setValor(memoria.get(topoMemoria - 1).getValor() / memoria.get(topoMemoria).getValor());
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("INVR")) {
-                    memoria.get(topoMemoria).setValor(-memoria.get(topoMemoria).getValor());
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CONJ")) {
-                    if (memoria.get(topoMemoria - 1).getValor() == 1 && memoria.get(topoMemoria).getValor() == 1) {
-                        memoria.get(topoMemoria - 1).setValor(1);
-                    } else {
-                        memoria.get(topoMemoria - 1).setValor(0);
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("DISJ")) {
-                    if (memoria.get(topoMemoria - 1).getValor() == 1 || memoria.get(topoMemoria).getValor() == 1) {
-                        memoria.get(topoMemoria - 1).setValor(1);
-                    } else {
-                        memoria.get(topoMemoria - 1).setValor(0);
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("NEGA")) {
-                    memoria.get(topoMemoria).setValor(1 - memoria.get(topoMemoria).getValor());
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CMME")) {
-                    if (memoria.get(topoMemoria - 1).getValor() < memoria.get(topoMemoria).getValor()) {
-                        memoria.get(topoMemoria - 1).setValor(1);
-                    } else {
-                        memoria.get(topoMemoria - 1).setValor(0);
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CMMA")) {
-                    if (memoria.get(topoMemoria - 1).getValor() > memoria.get(topoMemoria).getValor()) {
-                        memoria.get(topoMemoria - 1).setValor(1);
-                    } else {
-                        memoria.get(topoMemoria - 1).setValor(0);
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CMIG")) {
-                    if (memoria.get(topoMemoria - 1).getValor() == memoria.get(topoMemoria).getValor()) {
-                        memoria.get(topoMemoria - 1).setValor(1);
-                    } else {
-                        memoria.get(topoMemoria - 1).setValor(0);
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CMDG")) {
-                    if (memoria.get(topoMemoria - 1).getValor() != memoria.get(topoMemoria).getValor()) {
-                        memoria.get(topoMemoria - 1).setValor(1);
-                    } else {
-                        memoria.get(topoMemoria - 1).setValor(0);
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CMEG")) {
-                    if (memoria.get(topoMemoria - 1).getValor() <= memoria.get(topoMemoria).getValor()) {
-                        memoria.get(topoMemoria - 1).setValor(1);
-                    } else {
-                        memoria.get(topoMemoria - 1).setValor(0);
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("CMAG")) {
-                    if (memoria.get(topoMemoria - 1).getValor() >= memoria.get(topoMemoria).getValor()) {
-                        memoria.get(topoMemoria - 1).setValor(1);
-                    } else {
-                        memoria.get(topoMemoria - 1).setValor(0);
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("ARMZ")) {
-                    memoria.get(Integer.parseInt(codigoMepa.get(topoMepa).getK())).setValor(memoria.get(topoMemoria).getValor());
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("DSVS")) {
-                    for (Mepa j : codigoMepa) {
-                        if (codigoMepa.get(topoMepa).getK().equalsIgnoreCase(j.getRot())) {
-                            topoMepa = j.getEndereco() - 1;
-                            break;
-                        }
-                    }
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("DSVF")) {
-                    if (memoria.get(topoMemoria).getValor() == 0) {
-                        for (Mepa j : codigoMepa) {
-                            if (codigoMepa.get(topoMepa).getK().equals(j.getRot())) {
-                                topoMepa = j.getEndereco();
+                                auxx = acumulador;
+                                //auxx = JOptionPane.showInputDialog("Digite qual o valor para " + id.getLexema() + ":");
+                                memoriaaux.setEndereco("" + topoMemoria);
+                                memoriaaux.setValor(Integer.parseInt(auxx));
+                                memoria.add(memoriaaux);
                                 break;
                             }
                         }
-                    } else {
+                        break;
+                    case "IMPR":
+                        JOptionPane.showMessageDialog(null, "Resultado:" + memoria.get(topoMemoria).getValor());
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "CRCT":
+                        topoMemoria = topoMemoria + 1;
+                        memoriaaux.setEndereco("" + topoMemoria);
+                        memoriaaux.setValor(Integer.parseInt(codigoMepa.get(topoMepa).getK()));
+                        memoria.add(memoriaaux);
+                        break;
+                    case "CRVL":
+                        topoMemoria = topoMemoria + 1;
+                        memoriaaux.setEndereco("" + topoMemoria);
+                        memoriaaux.setValor(memoria.get(Integer.parseInt(codigoMepa.get(topoMepa).getK())).getValor());
+                        memoria.add(memoriaaux);
+                        break;
+                    case "SOMA":
+                        memoria.get(topoMemoria - 1).setValor(memoria.get(topoMemoria - 1).getValor() + memoria.get(topoMemoria).getValor());
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "SUBT":
+                        memoria.get(topoMemoria - 1).setValor(memoria.get(topoMemoria - 1).getValor() - memoria.get(topoMemoria).getValor());
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "MULT":
+                        memoria.get(topoMemoria - 1).setValor(memoria.get(topoMemoria - 1).getValor() * memoria.get(topoMemoria).getValor());
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "DIVI":
+                        memoria.get(topoMemoria - 1).setValor(memoria.get(topoMemoria - 1).getValor() / memoria.get(topoMemoria).getValor());
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "INVR":
+                        memoria.get(topoMemoria).setValor(-memoria.get(topoMemoria).getValor());
+                        break;
+                    case "CONJ":
+                        if (memoria.get(topoMemoria - 1).getValor() == 1 && memoria.get(topoMemoria).getValor() == 1) {
+                            memoria.get(topoMemoria - 1).setValor(1);
+                        } else {
+                            memoria.get(topoMemoria - 1).setValor(0);
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "DISJ":
+                        if (memoria.get(topoMemoria - 1).getValor() == 1 || memoria.get(topoMemoria).getValor() == 1) {
+                            memoria.get(topoMemoria - 1).setValor(1);
+                        } else {
+                            memoria.get(topoMemoria - 1).setValor(0);
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "NEGA":
+                        memoria.get(topoMemoria).setValor(1 - memoria.get(topoMemoria).getValor());
+                        break;
+                    case "CMME":
+                        if (memoria.get(topoMemoria - 1).getValor() < memoria.get(topoMemoria).getValor()) {
+                            memoria.get(topoMemoria - 1).setValor(1);
+                        } else {
+                            memoria.get(topoMemoria - 1).setValor(0);
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "CMMA":
+                        if (memoria.get(topoMemoria - 1).getValor() > memoria.get(topoMemoria).getValor()) {
+                            memoria.get(topoMemoria - 1).setValor(1);
+                        } else {
+                            memoria.get(topoMemoria - 1).setValor(0);
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "CMIG":
+                        if (memoria.get(topoMemoria - 1).getValor() == memoria.get(topoMemoria).getValor()) {
+                            memoria.get(topoMemoria - 1).setValor(1);
+                        } else {
+                            memoria.get(topoMemoria - 1).setValor(0);
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "CMDG":
+                        if (memoria.get(topoMemoria - 1).getValor() != memoria.get(topoMemoria).getValor()) {
+                            memoria.get(topoMemoria - 1).setValor(1);
+                        } else {
+                            memoria.get(topoMemoria - 1).setValor(0);
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "CMEG":
+                        if (memoria.get(topoMemoria - 1).getValor() <= memoria.get(topoMemoria).getValor()) {
+                            memoria.get(topoMemoria - 1).setValor(1);
+                        } else {
+                            memoria.get(topoMemoria - 1).setValor(0);
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "CMAG":
+                        if (memoria.get(topoMemoria - 1).getValor() >= memoria.get(topoMemoria).getValor()) {
+                            memoria.get(topoMemoria - 1).setValor(1);
+                        } else {
+                            memoria.get(topoMemoria - 1).setValor(0);
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "ARMZ":
+                        memoria.get(Integer.parseInt(codigoMepa.get(topoMepa).getK())).setValor(memoria.get(topoMemoria).getValor());
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
+                    case "DSVS":
+                        for (Mepa j : codigoMepa) {
+                            if (codigoMepa.get(topoMepa).getK().equalsIgnoreCase(j.getRot())) {
+                                topoMepa = j.getEndereco() - 1;
+                                break;
+                            }
+                        }
+                        break;
+                    case "DSVF":
+                        if (memoria.get(topoMemoria).getValor() == 0) {
+                            for (Mepa j : codigoMepa) {
+                                if (codigoMepa.get(topoMepa).getK().equals(j.getRot())) {
+                                    topoMepa = j.getEndereco();
+                                    break;
+                                }
+                            }
+                        } else {
 
-                    }
-                    memoria.remove(topoMemoria);
-                    topoMemoria = topoMemoria - 1;
-
-                } else if (codigoMepa.get(topoMepa).getInstrucao().equals("NADA")) {
+                        }
+                        memoria.remove(topoMemoria);
+                        topoMemoria = topoMemoria - 1;
+                        break;
                     //System.out.println("APENAS ANDA NA PILHA DE CODIGO");
+                    case "NADA":
+                        break;
+                    default:
+                        break;
                 }
-
             }
         } else {
             JOptionPane.showMessageDialog(null, "COMPILE O CODIGO ANTES DE EXECUTAR", "EXECUTAR", 2);
@@ -2186,7 +2232,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jLabelCompilarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelCompilarMouseExited
         // TODO add your handling code here:
-        ImageIcon II = new ImageIcon(getClass().getResource("/imagens/compilar.png"));
+        ImageIcon II = new ImageIcon(getClass().getResource("/imagens/compilarbtn.png"));
         jLabelCompilar.setIcon(II);
     }//GEN-LAST:event_jLabelCompilarMouseExited
 
@@ -2199,7 +2245,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         dialog.setModal(false); //se a tela fica presa ou nao
         dialog.setVisible(true); //Chama a dialog
         dialog = null; //Deixa o garbage collector agir    
- 
+
     }//GEN-LAST:event_jLabelInfoMousePressed
 
     private void jLabelInfoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelInfoMouseExited
@@ -2243,7 +2289,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 break;
             case 2:
                 System.out.println("botao cancel clicado");
-                this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
+                this.setDefaultCloseOperation(TelaPrincipal.DO_NOTHING_ON_CLOSE);
                 break;
         }
 
@@ -2279,6 +2325,35 @@ public class TelaPrincipal extends javax.swing.JFrame {
         executarMepa();
     }//GEN-LAST:event_jMenuItemCompExecActionPerformed
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
+        // lookandfeel muda de cores
+        // biblioteca     looksdemo-2.3.1.jar
+        //SkyBlue()
+        //BrownSugar()
+        // DarkStar()  
+        //DesertGreen()
+        //Silver()
+        //ExperienceRoyale()
+//        try {
+//            PlasticLookAndFeel.setPlasticTheme(new DarkStar());
+//            try {
+//                UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+//            } catch (InstantiationException ex) {
+//                Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (IllegalAccessException ex) {
+//                Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (UnsupportedLookAndFeelException ex) {
+//                Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//
+//        } catch (ClassNotFoundException ex) {
+//            ex.printStackTrace();
+//        }
+//        SwingUtilities.updateComponentTreeUI(this);
+
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -2288,9 +2363,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+
+        try {
+            UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
+            //UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
+            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
