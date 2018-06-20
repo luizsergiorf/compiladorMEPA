@@ -1,0 +1,16 @@
+Program teste_repeat
+Var
+	Soma, Conta, Ini, Fim : integer;
+Begin
+	Ini := 0;
+	Fim := 0;
+	Conta := 0;
+	Soma := 0;
+	read(Ini);
+
+	repeat 
+		Soma := Soma + 1;
+		write(soma);
+		ini := ini - 1;
+	until (ini=0);
+End.

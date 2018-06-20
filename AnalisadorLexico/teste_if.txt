@@ -1,0 +1,15 @@
+Program usando_if Var
+	Soma, Conta, Ini, Fim : integer;
+Begin
+	Ini := 0;
+	Fim := 0;
+	read(ini, fim);
+	if(ini>fim) then
+	begin
+		write(ini);
+	end
+	else
+	begin
+		write(fim);
+	end;
+End.

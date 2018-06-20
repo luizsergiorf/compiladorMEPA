@@ -1595,7 +1595,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public void var_write() {
         if (tokenAux.getClasse().equals("cId")) {
             acao6();
-            mais_var_read();
+            mais_var_write();
         }
     }
 

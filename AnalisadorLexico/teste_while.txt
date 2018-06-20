@@ -1,0 +1,16 @@
+Program UsandoWhile Var
+	Soma, Conta, Ini, Fim : integer;
+Begin
+	Ini := 0;
+	Fim := 0;
+	Conta := 0;
+	Soma := 0;
+	read( Ini, Fim );
+
+	while(ini<fim) do
+	begin
+		Soma := Soma + 1;
+		write(soma);
+		ini := ini + 1;
+	end;
+End.
