@@ -1,8 +1,8 @@
 package glazed;
 
 
-import analisadorlexico.Identificador;
-import analisadorlexico.Token;
+import analisador.Identificador;
+import analisador.Token;
 import ca.odell.glazedlists.gui.TableFormat;
 
 /**

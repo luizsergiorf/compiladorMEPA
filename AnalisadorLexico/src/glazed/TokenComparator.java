@@ -1,7 +1,7 @@
 package glazed;
 
 
-import analisadorlexico.Token;
+import analisador.Token;
 import java.util.Comparator;
 
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package analisadorlexico;
+package analisador;
 
 /**
  *
@@ -16,11 +16,12 @@ public class Mepa {
     private String instrucao;
     private String K;
 
-    Mepa() {
+    public Mepa() {
         Rot = "";
         instrucao = "";
         K = "";
     }
+
 
     /**
      * @return the Rot

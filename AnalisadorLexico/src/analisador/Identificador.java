@@ -3,31 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package analisadorlexico;
+package analisador;
 
 /**
  *
- * @author Alunos
+ * @author felli
  */
-public class Token {
+public class Identificador {
+    
     private String lexema; 
     private String classe;
-    private int linha;
-    private int coluna;
-
-    public Token(String lexema, String classe, int linha, int coluna) {
+    private int nivel;
+    private int endereco;
+    
+    public Identificador(String lexema, String classe, int nivel, int endereco) {
         this.lexema = lexema;
         this.classe = classe;
-        this.linha = linha;
-        this.coluna = coluna;
+        this.nivel = nivel;
+        this.endereco = endereco;
     }
     
-    public Token(){
+    public Identificador(){
         
     }
 
-   
-  
     /**
      * @return the lexema
      */
@@ -57,38 +56,37 @@ public class Token {
     }
 
     /**
-     * @return the linha
+     * @return the nivel
      */
-    public int getLinha() {
-        return linha;
+    public int getNivel() {
+        return nivel;
     }
 
     /**
-     * @param linha the linha to set
+     * @param nivel the nivel to set
      */
-    public void setLinha(int linha) {
-        this.linha = linha;
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
     }
 
     /**
-     * @return the coluna
+     * @return the deslocamento
      */
-    public int getColuna() {
-        return coluna;
+    public int getEndereco() {
+        return endereco;
     }
 
     /**
-     * @param coluna the coluna to set
+     * @param deslocamento the deslocamento to set
      */
-    public void setColuna(int coluna) {
-        this.coluna = coluna;
-    }
-
-    @Override
-    public String toString() {
-        return "TOKEN >> " + "lexema= " + lexema + ", classe= " + classe + ", linha= " + linha + ", coluna= " + coluna + "\n";
+    public void setEndereco(int endereco) {
+        this.endereco = endereco;
     }
     
+    @Override
+    public String toString() {
+        return "TOKEN >> " + "lexema= " + lexema + ", classe= " + classe + ", endereco= " + endereco + "\n";
+    }
     
     
 }

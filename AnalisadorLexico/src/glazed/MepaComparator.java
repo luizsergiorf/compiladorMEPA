@@ -1,7 +1,7 @@
 package glazed;
 
 
-import analisadorlexico.Mepa;
+import analisador.Mepa;
 import java.util.Comparator;
 
 
