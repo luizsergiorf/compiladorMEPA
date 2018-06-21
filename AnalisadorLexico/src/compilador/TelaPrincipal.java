@@ -286,6 +286,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public TelaPrincipal() {
         System.out.println("==== SOFTWARE DA DISCIPLINA DE COMPILADORES ====");
         initComponents();
+        jTextArea.setText("");
+        jTextAreaSaida.setText("");
     }
 
     /**
@@ -810,7 +812,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void jMenuItemNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNovoActionPerformed
         // TODO add your handling code here:
 
-        if (!jTextArea.getText().isEmpty()) {
+        if (!jTextArea.getText().equals("")) {
 
             int opc = 0;
             JFileChooser j = new JFileChooser(UtilidadesArquivos.getDiretorioDoPrograma());
