@@ -16,14 +16,24 @@ import glazed.IdTableFormat;
 import glazed.MepaTableFormat;
 import glazed.TokenTableFormat;
 import java.awt.Cursor;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.text.Caret;
 import other.FiltroDeArquivos;
 import other.UtilidadesArquivos;
 
@@ -540,6 +550,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuArquivo.setText("Arquivo");
 
         jMenuItemNovo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/novobtn.png"))); // NOI18N
         jMenuItemNovo.setText("Novo");
         jMenuItemNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -549,6 +560,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuArquivo.add(jMenuItemNovo);
 
         jMenuItemAbrir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/openbtn.png"))); // NOI18N
         jMenuItemAbrir.setText("Abrir");
         jMenuItemAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -558,6 +570,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuArquivo.add(jMenuItemAbrir);
 
         jMenuItemSalvar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/savebtn.png"))); // NOI18N
         jMenuItemSalvar.setText("Salvar");
         jMenuItemSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -574,6 +587,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         jMenuArquivo.add(jMenuItemSalvarComo);
 
+        jMenuItemSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/sairbtn.png"))); // NOI18N
         jMenuItemSair.setText("Sair");
         jMenuItemSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -587,15 +601,33 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuEditar.setText("Editar");
 
         jMenuItemRecortar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemRecortar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/tesourabtn.png"))); // NOI18N
         jMenuItemRecortar.setText("Recortar");
+        jMenuItemRecortar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemRecortarActionPerformed(evt);
+            }
+        });
         jMenuEditar.add(jMenuItemRecortar);
 
         jMenuItemCopiar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemCopiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/copiarbtn.png"))); // NOI18N
         jMenuItemCopiar.setText("Copiar");
+        jMenuItemCopiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCopiarActionPerformed(evt);
+            }
+        });
         jMenuEditar.add(jMenuItemCopiar);
 
         jMenuItemColar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemColar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/colarbtn.png"))); // NOI18N
         jMenuItemColar.setText("Colar");
+        jMenuItemColar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemColarActionPerformed(evt);
+            }
+        });
         jMenuEditar.add(jMenuItemColar);
 
         jMenuBar1.add(jMenuEditar);
@@ -769,14 +801,39 @@ public class TelaPrincipal extends javax.swing.JFrame {
             arquivo = j.getSelectedFile();
             UtilidadesArquivos.salvarEmArquivoTexto(jTextArea.getText(), arquivo);
         }
+        if (opc == 1) { //se clicou em cancelar
+
+        }
 
     }//GEN-LAST:event_jMenuItemSalvarComoActionPerformed
 
     private void jMenuItemNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNovoActionPerformed
         // TODO add your handling code here:
-        jTextArea.setText("");
-        arquivo = null;
-        conteudo = "";
+
+        if (!jTextArea.getText().isEmpty()) {
+
+            int opc = 0;
+            JFileChooser j = new JFileChooser(UtilidadesArquivos.getDiretorioDoPrograma());
+
+            j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            opc = j.showSaveDialog(this);
+
+            System.out.println(opc);
+
+            if (opc == 0) {
+                arquivo = j.getSelectedFile();
+                UtilidadesArquivos.salvarEmArquivoTexto(jTextArea.getText(), arquivo);
+
+                jTextArea.setText("");
+                arquivo = null;
+                conteudo = "";
+            }
+            if (opc == 1) { //se clicou em cancelar
+
+            }
+
+        }
+
     }//GEN-LAST:event_jMenuItemNovoActionPerformed
 
     public void analiseLexica() {
@@ -1949,13 +2006,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Geracode(null, "ARMZ", identificadores.get(Addr).getEndereco() + "");
     }
 
-    int Addr2=-1;
+    int Addr2 = -1;
+
     public void acao27() {
         RotFor = GerarRotulo();
         RotEnd = GerarRotulo();
         Geracode("ROT" + RotFor, "NADA", null);
         Geracode(null, "CRVL", identificadores.get(Addr).getEndereco() + "");
-        
+
         System.out.println("IndexIndentificador - " + indexIdentificador + " Addr = " + Addr);
         Addr2 = Addr;
     }
@@ -1966,7 +2024,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public void acao29() {
-        
+
         Geracode(null, "CRVL", identificadores.get(Addr2).getEndereco() + ""); //antes era Addr
         Geracode(null, "CRCT", "1");
         Geracode(null, "SOMA", null);
@@ -2353,6 +2411,63 @@ public class TelaPrincipal extends javax.swing.JFrame {
 //        SwingUtilities.updateComponentTreeUI(this);
 
     }//GEN-LAST:event_formWindowOpened
+
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+    private void copy() {
+        //clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        String text = jTextArea.getSelectedText();
+        StringSelection selection = new StringSelection(text);
+        clipboard.setContents(selection, null);
+    }
+
+    private void cut() {
+
+        String texto = jTextArea.getText();
+        String texto_recortado = jTextArea.getSelectedText();
+
+        StringBuilder build = new StringBuilder(texto);
+        texto = "" + build.replace(jTextArea.getSelectionStart(), jTextArea.getSelectionEnd(), ""); //retiro a string selecionada
+        jTextArea.setText(texto); //retorno o texto pra minha jTextArea
+
+        StringSelection selection = new StringSelection(texto_recortado);
+        clipboard.setContents(selection, null);
+    }
+
+    private void paste() {
+
+        Transferable contents = clipboard.getContents(this);
+        if (contents == null) {
+            // TODO vazio  
+        } else if (contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+            try {
+                String texto = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                // TODO processar o texto  
+                int pos = jTextArea.getCaretPosition(); //pegando a posicao do cursor
+                jTextArea.insert(texto, pos);
+            } catch (UnsupportedFlavorException | IOException ex) {
+                Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            // não contem texto (imagem?)  
+        }
+    }
+
+
+    private void jMenuItemColarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemColarActionPerformed
+        // TODO add your handling code here:
+        paste();
+    }//GEN-LAST:event_jMenuItemColarActionPerformed
+
+    private void jMenuItemCopiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopiarActionPerformed
+        // TODO add your handling code here:
+        copy();
+    }//GEN-LAST:event_jMenuItemCopiarActionPerformed
+
+    private void jMenuItemRecortarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRecortarActionPerformed
+        // TODO add your handling code here:
+        cut();
+    }//GEN-LAST:event_jMenuItemRecortarActionPerformed
 
     /**
      * @param args the command line arguments
