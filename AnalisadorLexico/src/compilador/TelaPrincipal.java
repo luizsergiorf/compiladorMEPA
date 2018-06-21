@@ -24,6 +24,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,6 +71,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
     int RotRepeat = 0;
     String rel;
     int RotElse = 0;
+    int RotEndIf = 0;
+    int RotEndWhile = 0;
+    int RotEndRepeat = 0;
 
     //VARIAVEIS PARA LEXEMA
     int tamanhoTabela = 68;
@@ -1078,6 +1082,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         RotRepeat = 0;
         rel = "";
         RotElse = 0;
+        RotEndIf = 0;
+
 
         program();
     }
@@ -1946,18 +1952,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     public void acao17() {
         RotElse = GerarRotulo();
-        RotEnd = GerarRotulo();
+        RotEndIf = GerarRotulo();
         //RotEnd = RotElse;
         Geracode(null, "DSVF", "ROT" + RotElse);
+
     }
 
     public void acao18() {
-        Geracode(null, "DSVS", "ROT" + RotEnd);
+        Geracode(null, "DSVS", "ROT" + RotEndIf);
         Geracode("ROT" + RotElse, "NADA", null);
     }
 
     public void acao19() {
-        Geracode("ROT" + RotEnd, "NADA", null);
+        Geracode("ROT" + (RotEndIf), "NADA", null);
+        //R-=2;
+        RotElse -= 2;
+        RotEndIf -= 2;
     }
 
     public void acao20() {
@@ -2008,7 +2018,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Geracode(null, "ARMZ", identificadores.get(Addr).getEndereco() + "");
     }
 
-    int Addr2 = -1;
+    //vetor de enderecos para for
+    //int Addr2[];
+    ArrayList<Integer> Addr2 = new ArrayList<>();
 
     public void acao27() {
         RotFor = GerarRotulo();
@@ -2017,7 +2029,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Geracode(null, "CRVL", identificadores.get(Addr).getEndereco() + "");
 
         System.out.println("IndexIndentificador - " + indexIdentificador + " Addr = " + Addr);
-        Addr2 = Addr;
+        //Addr2[pos] = Addr;
+        Addr2.add(Addr);
     }
 
     public void acao28() {
@@ -2027,12 +2040,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     public void acao29() {
 
-        Geracode(null, "CRVL", identificadores.get(Addr2).getEndereco() + ""); //antes era Addr
+        Geracode(null, "CRVL", identificadores.get(Addr2.get(Addr2.size() - 1)).getEndereco() + ""); //antes era Addr
         Geracode(null, "CRCT", "1");
         Geracode(null, "SOMA", null);
-        Geracode(null, "ARMZ", identificadores.get(Addr2).getEndereco() + "");
+        Geracode(null, "ARMZ", identificadores.get(Addr2.get(Addr2.size() - 1)).getEndereco() + "");
         Geracode(null, "DSVS", "ROT" + RotFor);
         Geracode("ROT" + RotEnd, "NADA", null);
+
+        //R = R-2; //voltando os Rotulos para fechar as funçoes
+        RotEnd -= 2;
+        RotFor -= 2;
+        Addr2.remove(Addr2.size() - 1);
+
     }
 
     public void acao30() {
