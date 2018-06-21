@@ -3,30 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package analisadorlexico;
+package analisador;
 
 /**
  *
- * @author felli
+ * @author Alunos
  */
-public class Identificador {
-    
+public class Token {
     private String lexema; 
     private String classe;
-    private int nivel;
-    private int endereco;
-    
-    public Identificador(String lexema, String classe, int nivel, int endereco) {
+    private int linha;
+    private int coluna;
+
+    public Token(String lexema, String classe, int linha, int coluna) {
         this.lexema = lexema;
         this.classe = classe;
-        this.nivel = nivel;
-        this.endereco = endereco;
+        this.linha = linha;
+        this.coluna = coluna;
     }
     
-    public Identificador(){
+    public Token(){
         
     }
 
+   
+  
     /**
      * @return the lexema
      */
@@ -56,37 +57,38 @@ public class Identificador {
     }
 
     /**
-     * @return the nivel
+     * @return the linha
      */
-    public int getNivel() {
-        return nivel;
+    public int getLinha() {
+        return linha;
     }
 
     /**
-     * @param nivel the nivel to set
+     * @param linha the linha to set
      */
-    public void setNivel(int nivel) {
-        this.nivel = nivel;
+    public void setLinha(int linha) {
+        this.linha = linha;
     }
 
     /**
-     * @return the deslocamento
+     * @return the coluna
      */
-    public int getEndereco() {
-        return endereco;
+    public int getColuna() {
+        return coluna;
     }
 
     /**
-     * @param deslocamento the deslocamento to set
+     * @param coluna the coluna to set
      */
-    public void setEndereco(int endereco) {
-        this.endereco = endereco;
+    public void setColuna(int coluna) {
+        this.coluna = coluna;
     }
-    
+
     @Override
     public String toString() {
-        return "TOKEN >> " + "lexema= " + lexema + ", classe= " + classe + ", endereco= " + endereco + "\n";
+        return "TOKEN >> " + "lexema= " + lexema + ", classe= " + classe + ", linha= " + linha + ", coluna= " + coluna + "\n";
     }
+    
     
     
 }

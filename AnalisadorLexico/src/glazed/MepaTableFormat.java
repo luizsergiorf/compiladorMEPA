@@ -1,15 +1,11 @@
 package glazed;
 
 
-import analisador.Identificador;
-import analisador.Token;
+import analisador.Mepa;
 import ca.odell.glazedlists.gui.TableFormat;
 
-/**
- *
- * @author Aluno
- */
-public class IdTableFormat implements TableFormat<Identificador>{
+
+public class MepaTableFormat implements TableFormat<Mepa>{
 
     @Override
     public int getColumnCount() {
@@ -20,31 +16,32 @@ public class IdTableFormat implements TableFormat<Identificador>{
     public String getColumnName(int column) {
         switch (column){
             case 0:
-                return "Lexema";
-            case 1:
-                return "Categoria";
-            case 2:
-                return "Nivel";
-            case 3:
                 return "Endereço";
+            case 1:
+                return "Rot";
+            case 2:
+                return "Instrução";
+            case 3:
+                return "K";
             default: throw new IllegalArgumentException();
         }
     }
 
     @Override
-    public Object getColumnValue(Identificador i, int column) {
+    public Object getColumnValue(Mepa mp, int column) {
         switch (column){
             case 0:
-                return i.getLexema();
+                return mp.getEndereco();
             case 1:
-                return i.getClasse();
+                return mp.getRot();
             case 2:
-                return i.getNivel();
+                return mp.getInstrucao();
             case 3:
-                return i.getEndereco();
+                return mp.getK();
             default: 
                 throw new IllegalArgumentException();
         }
     }
     
 }
+
