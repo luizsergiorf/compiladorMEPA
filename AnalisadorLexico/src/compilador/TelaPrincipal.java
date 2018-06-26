@@ -13,6 +13,7 @@ import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import glazed.IdTableFormat;
+import glazed.MemoriaTableFormat;
 import glazed.MepaTableFormat;
 import glazed.TokenTableFormat;
 import java.awt.Cursor;
@@ -34,7 +35,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import javax.swing.text.Caret;
 import other.FiltroDeArquivos;
 import other.UtilidadesArquivos;
 
@@ -45,14 +45,17 @@ import other.UtilidadesArquivos;
 public class TelaPrincipal extends javax.swing.JFrame {
 
     /**
-     * Creates new form TelaPrincipal
+     * Creates new form TelaPrincipal by IFTM
      */
+    //janela jDialog
     private JanelaAjuda dialog = null;
 
+    //Variaveis de aquivo
     File arquivo = null;
     String conteudo = "";
     String linguagem = "";
 
+    //VARIAVEIS PARA ANALISE SINTATICA
     Token tokenAux;
     boolean validaCompila;
     boolean validaId;
@@ -63,26 +66,36 @@ public class TelaPrincipal extends javax.swing.JFrame {
     int Addr = 0; //endereço da pilha mepa
     String opMul;
     String opAd;
+    String rel;
     int S = 0; // Variável cujo objetivo é determinar o endereço para uma variável na Pilha de Dados
     int R = 0; // Variável cujo objetivo é determinar um endereço para um rótulo na Pilha de Código
-    int RotFor = 0;
-    int RotEnd = 0;
-    int RotWhile = 0;
-    int RotRepeat = 0;
-    String rel;
-    int RotElse = 0;
-    int RotEndIf = 0;
-    int RotEndWhile = 0;
-    int RotEndRepeat = 0;
+    private final EventList<Mepa> codigoMepa = new BasicEventList<>();
+    private final EventList<Memoria> memoria = new BasicEventList<>();
 
-    //VARIAVEIS PARA LEXEMA
+    //PARA CRIAR ROTULOS DE FOR
+    ArrayList<Integer> RotFor = new ArrayList<>();
+    ArrayList<Integer> RotEndFor = new ArrayList<>();
+    int indiceFor = 0;
+
+    //PARA CRIAR ROTULOS DE WHILE
+    ArrayList<Integer> RotWhile = new ArrayList<>();
+    ArrayList<Integer> RotEndWhile = new ArrayList<>();
+    int indiceWhile = 0;
+
+    //PARA CRIAR ROTULOS DE REPEAT
+    ArrayList<Integer> RotRepeat = new ArrayList<>();
+    int indiceRepeat = 0;
+
+    //PARA CRIAR ROTULOS DE ELSE
+    ArrayList<Integer> RotElse = new ArrayList<>();
+    ArrayList<Integer> RotEndElse = new ArrayList<>();
+    int indiceElse = 0;
+
+    //VARIAVEIS PARA GERAR ITENS LEXICOS E TABELA DE SIMBOLO
     int tamanhoTabela = 68;
     int numerosLinhas = 0;
     private final EventList<Token> tokens = new BasicEventList<>();
     private final EventList<Identificador> identificadores = new BasicEventList<>();
-    private final EventList<Mepa> codigoMepa = new BasicEventList<>();
-    private final EventList<Memoria> memoria = new BasicEventList<>();
-
     Token tk = new Token();
     Identificador ident = new Identificador();
 
@@ -319,6 +332,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTableMemoria = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabelExecutar = new javax.swing.JLabel();
         jLabelCompilar = new javax.swing.JLabel();
@@ -435,21 +452,43 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTable3.setCellSelectionEnabled(true);
         jScrollPane5.setViewportView(jTable3);
 
+        jTableMemoria.setModel(GlazedListsSwing.eventTableModel(memoria, new MemoriaTableFormat()));
+        jScrollPane6.setViewportView(jTableMemoria);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel1.setText("MEMÓRIA");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("CÓDIGO MEPA");
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(488, Short.MAX_VALUE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(220, Short.MAX_VALUE))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
 
         jTabbedPaneEdicao.addTab("MEPA", jPanel6);
@@ -1065,25 +1104,32 @@ public class TelaPrincipal extends javax.swing.JFrame {
         //textMepa.setText("");
         indexToken = 0;
         indexIdentificador = 0;
-        codigoMepa.clear();
         end = 0;
+        codigoMepa.clear();
+
+        tokenAux = null;
 
         Addr = 0; //endereço da pilha mepa
         opMul = "";
         opAd = "";
+        rel = "";
         S = 0; // Variável cujo objetivo é determinar o endereço para uma variável na Pilha de Dados
         R = 0; // Variável cujo objetivo é determinar um endereço para um rótulo na Pilha de Código
-        RotFor = 0;
-        RotEnd = 0;
-        RotWhile = 0;
 
-        tokenAux = null;
+        RotFor.clear();
+        RotEndFor.clear();
+        indiceFor = -1;
 
-        RotRepeat = 0;
-        rel = "";
-        RotElse = 0;
-        RotEndIf = 0;
+        RotWhile.clear();
+        RotEndWhile.clear();
+        indiceWhile = -1;
 
+        RotRepeat.clear();
+        indiceRepeat = -1;
+
+        RotElse.clear();;
+        RotEndElse.clear();
+        indiceElse= -1;
 
         program();
     }
@@ -1700,6 +1746,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         if (validaCompila) {
             indexToken++;
             tokenAux = tokens.get(indexToken); // atualzia lexama
+
             dvar();
 
             indexToken++;
@@ -1951,47 +1998,61 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public void acao17() {
-        RotElse = GerarRotulo();
-        RotEndIf = GerarRotulo();
+        indiceElse++;
+        RotElse.add(GerarRotulo());
+        RotEndElse.add(GerarRotulo());
+    
         //RotEnd = RotElse;
-        Geracode(null, "DSVF", "ROT" + RotElse);
+        Geracode(null, "DSVF", "ROT" + RotElse.get(indiceElse));
 
     }
 
     public void acao18() {
-        Geracode(null, "DSVS", "ROT" + RotEndIf);
-        Geracode("ROT" + RotElse, "NADA", null);
+        Geracode(null, "DSVS", "ROT" + RotEndElse.get(indiceElse));
+        Geracode("ROT" + RotElse.get(indiceElse), "NADA", null);
     }
 
     public void acao19() {
-        Geracode("ROT" + (RotEndIf), "NADA", null);
-        //R-=2;
-        RotElse -= 2;
-        RotEndIf -= 2;
+        Geracode("ROT" + RotEndElse.get(indiceElse), "NADA", null);
+      
+        RotElse.remove(indiceElse);
+        RotEndElse.remove(indiceElse);
+        indiceElse--;
+
     }
 
     public void acao20() {
-        RotWhile = GerarRotulo();
-        RotEnd = GerarRotulo();
-        Geracode("ROT" + RotWhile, "NADA", null);
+        indiceWhile++;
+        RotWhile.add(GerarRotulo());
+        RotEndWhile.add(GerarRotulo());
+
+        Geracode("ROT" + RotWhile.get(indiceWhile), "NADA", null);
     }
 
     public void acao21() {
-        Geracode(null, "DSVF", "ROT" + RotEnd);
+        Geracode(null, "DSVF", "ROT" + RotEndWhile.get(indiceWhile));
     }
 
     public void acao22() {
-        Geracode(null, "DSVS", "ROT" + RotWhile);
-        Geracode("ROT" + RotEnd, "NADA", null);
+        Geracode(null, "DSVS", "ROT" + RotWhile.get(indiceWhile));
+        Geracode("ROT" + RotEndWhile.get(indiceWhile), "NADA", null);
+
+        RotWhile.remove(indiceWhile);
+        RotEndWhile.remove(indiceWhile);
+        indiceWhile--;
     }
 
     public void acao23() {
-        RotRepeat = GerarRotulo();
-        Geracode("ROT" + RotRepeat, "NADA", null);
+        indiceRepeat++;
+        RotRepeat.add(GerarRotulo());
+
+        Geracode("ROT" + RotRepeat.get(indiceRepeat), "NADA", null);
     }
 
     public void acao24() {
-        Geracode(null, "DSVF", "ROT" + RotRepeat);
+        Geracode(null, "DSVF", "ROT" + RotRepeat.get(indiceRepeat));
+        RotRepeat.remove(indiceRepeat);
+        indiceRepeat--;
     }
 
     public void acao25() {
@@ -2013,29 +2074,29 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     public void acao26() {
-        //talvez precisa de ajuste no endereço 
-
         Geracode(null, "ARMZ", identificadores.get(Addr).getEndereco() + "");
     }
 
     //vetor de enderecos para for
-    //int Addr2[];
     ArrayList<Integer> Addr2 = new ArrayList<>();
 
     public void acao27() {
-        RotFor = GerarRotulo();
-        RotEnd = GerarRotulo();
-        Geracode("ROT" + RotFor, "NADA", null);
+
+        indiceFor++;
+        RotFor.add(GerarRotulo());
+        RotEndFor.add(GerarRotulo());
+
+        Geracode("ROT" + RotFor.get(indiceFor), "NADA", null);
         Geracode(null, "CRVL", identificadores.get(Addr).getEndereco() + "");
 
-        System.out.println("IndexIndentificador - " + indexIdentificador + " Addr = " + Addr);
+        //System.out.println("IndexIndentificador - " + indexIdentificador + " Addr = " + Addr);
         //Addr2[pos] = Addr;
         Addr2.add(Addr);
     }
 
     public void acao28() {
         Geracode(null, "CMEG", null);
-        Geracode(null, "DSVF", "ROT" + RotEnd);
+        Geracode(null, "DSVF", "ROT" + RotEndFor.get(indiceFor));
     }
 
     public void acao29() {
@@ -2044,12 +2105,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Geracode(null, "CRCT", "1");
         Geracode(null, "SOMA", null);
         Geracode(null, "ARMZ", identificadores.get(Addr2.get(Addr2.size() - 1)).getEndereco() + "");
-        Geracode(null, "DSVS", "ROT" + RotFor);
-        Geracode("ROT" + RotEnd, "NADA", null);
+        Geracode(null, "DSVS", "ROT" + RotFor.get(indiceFor));
+        Geracode("ROT" + RotEndFor.get(indiceFor), "NADA", null);
 
         //R = R-2; //voltando os Rotulos para fechar as funçoes
-        RotEnd -= 2;
-        RotFor -= 2;
+        //RotEnd -= 2;
+        //RotFor -= 2;
+        RotFor.remove(indiceFor);
+        RotEndFor.remove(indiceFor);
+        indiceFor--;
+
         Addr2.remove(Addr2.size() - 1);
 
     }
@@ -2238,6 +2303,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         for (Mepa j : codigoMepa) {
                             if (codigoMepa.get(topoMepa).getK().equalsIgnoreCase(j.getRot())) {
                                 topoMepa = j.getEndereco() - 1;
+
                                 break;
                             }
                         }
@@ -2531,6 +2597,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelCompilar;
     private javax.swing.JLabel jLabelCompilarExecutar;
     private javax.swing.JLabel jLabelExecutar;
@@ -2562,10 +2630,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPaneEdicao;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTableMemoria;
     private javax.swing.JTextArea jTextArea;
     private javax.swing.JTextArea jTextAreaSaida;
     // End of variables declaration//GEN-END:variables

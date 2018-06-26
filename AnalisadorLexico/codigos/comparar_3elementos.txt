@@ -1,0 +1,35 @@
+{TESTANDO O CODIGO COM AS FUNCOES MEPA}
+{NAO FUNCIONA AINDA}
+{Compara o valor entra A, B e C e mostra o maior}
+Program Maior
+Var
+	A, B, C : integer;
+Begin
+	A := 0;
+	B := 0;
+	C := 0;
+	read(A, B, C);
+
+	if( A > B ) then
+	begin
+		if( A > C ) then
+		begin
+			write(A);
+		end
+		else
+		begin
+			write(C);
+		end;
+	end
+	else 
+	begin
+		if( B > C ) then
+		begin
+			write(B);
+		end
+		else
+		begin
+			write(C);
+		end;
+	end;
+End.

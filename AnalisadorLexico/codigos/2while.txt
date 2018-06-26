@@ -1,0 +1,20 @@
+Program while2
+Var
+	i, j , resul: integer;
+Begin
+	i := 0;
+	j := 0;
+
+
+	while (i<=10) do begin
+		while (j<=10) do begin
+			resul := i * j;
+			write(resul);
+			j := j+1;
+		end;
+		j := 0;
+		i := i + 1;
+	end;
+
+End.
+

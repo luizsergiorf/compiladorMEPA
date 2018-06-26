@@ -1,0 +1,18 @@
+{Mostra o intervalo entra A e B}
+{Pega do usuario o valor de A e apos B}
+{FELLIPE AUGUSTO PRATES}
+
+Program intervalo
+Var
+	A, B : integer;
+Begin
+	A := 0;
+	B := 0;
+
+	read(A, B);
+	while(A <= B) do
+	begin
+		write(A);
+		A := A+1;
+	end;
+End.
