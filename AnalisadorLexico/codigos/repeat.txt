@@ -1,0 +1,22 @@
+{LUIZ SERGIO FERREIRA}
+{Somatorio do valor A ate C ser igual a B}
+{Pega do usuario o valor de A e B}
+
+{variavel C começa com valor 0}
+
+Program uso_repeat
+Var
+	A, B, C, resul : integer;
+Begin
+	A := 0;
+	B := 0;
+	C := 0;
+
+	read(A, B);
+
+	repeat
+		resul := resul + A;
+		write(resul);
+		C := C + 1;
+	until (B=C);
+End.

@@ -1,0 +1,18 @@
+{FELLIPE AUGUSTO PRATES}
+{MOSTRA TODAS AS MUTIPLICACAO DE 0 a 10}
+Program base10
+Var
+	i, j, resultado : integer;
+Begin
+	i := 0;
+	j := 0;
+	resultado := 0;
+
+	For i := 1 To 10 do begin
+		For j := 0 To 10 do begin
+			resultado := i * j;
+			write(resultado);
+		End;
+	End;
+
+End.

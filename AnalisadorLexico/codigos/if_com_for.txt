@@ -1,0 +1,23 @@
+{FELLIPE PRATES}
+{Usando if junto com for}
+Program Maior
+Var
+	A, B, i : integer;
+Begin
+	A := 0;
+	B := 0;
+	i := 0;
+	read(A, B);
+
+	if( A > B ) then
+	begin
+		For i := 0 To A do begin
+			write(i);
+		End;
+	end
+	else begin
+		For i := 0 To B do begin
+			write(i);
+		End;
+	end;
+End.

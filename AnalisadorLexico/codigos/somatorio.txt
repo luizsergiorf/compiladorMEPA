@@ -1,3 +1,4 @@
+{PROFESSOR ROGERIO NEPUCENO}
 Program Somatorio
 Var
 	Soma, Conta, Ini, Fim : integer;

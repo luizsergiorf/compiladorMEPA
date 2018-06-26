@@ -1,0 +1,18 @@
+{TIAGO ELIAS OLIVEIRA}
+{Compara o valor entra A e B e mostra o maior}
+Program Maior
+Var
+	A, B : integer;
+Begin
+	A := 0;
+	B := 0;
+	read(A, B);
+
+	if( A > B ) then
+	begin
+		write(A);
+	end
+	else begin
+		write(B);
+	end;
+End.
