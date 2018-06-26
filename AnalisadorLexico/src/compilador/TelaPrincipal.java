@@ -453,6 +453,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jTable3);
 
         jTableMemoria.setModel(GlazedListsSwing.eventTableModel(memoria, new MemoriaTableFormat()));
+        jTableMemoria.setCellSelectionEnabled(true);
         jScrollPane6.setViewportView(jTableMemoria);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
